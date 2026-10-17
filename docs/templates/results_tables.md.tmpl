@@ -1,0 +1,64 @@
+# Results tables (copy these into the slides)
+
+{{data_banner}}
+Data fingerprint `{{fingerprint}}`; generated {{generated_at}}.
+
+## 1. Vertices
+{{vertex_table}}
+
+## 2. Directed distance matrix (km): row = FROM, column = TO
+{{matrix_table}}
+
+\* = ASSUMED (not measured). Provenance: {{status_summary}}. Asymmetric pairs: {{asym_pairs}} of {{n_pairs}}.
+
+## 3. Simulated Annealing parameters
+| Parameter | Value |
+|---|---|
+| T0 | {{t0}} km (average worse move {{mean_uphill}} km accepted with P = {{target_p}}) |
+| α | {{alpha}} |
+| moves per temperature | {{ipt}} |
+| T_stop | {{t_stop}} km |
+| patience | {{patience_levels}} levels (T falls {{patience_drop}}×) |
+| neighbour | {{neighbor}} |
+| seed | {{seed}} |
+
+## 4. Result of the presentation run (seed {{seed}})
+- Route: **{{sa_route}}**
+- Names: {{sa_route_names}}
+- Total: **{{sa_cost}} km** (initial random tour {{initial_cost}} km: {{initial_route}})
+- {{iterations}} moves in {{levels}} levels; best found at move {{best_found_at}}; stopped because: {{stop_reason}}; {{runtime_ms}} ms.
+
+## 5. Verification (edge by edge)
+{{verification_checks}}
+
+{{verification_table}}
+
+Sum: {{verification_sum}}
+
+## 6. Optimality evidence
+{{optimality_statement}}
+
+- Brute force: {{n_tours_formula}} tours, optimum {{optimal_cost}} km ({{bf_runtime}} s). {{ties_note}}
+- Greedy nearest neighbour: {{greedy_cost}} km (+{{greedy_gap}}%): {{greedy_route}}
+- Average random tour: {{mean_random}} km; worst tour: {{worst_tour}} km.
+
+## 7. {{runs_n}} independent runs (paper Table 2 format, km)
+{{table2}}
+
+Mean gap {{mean_gap}}%, worst gap {{max_gap}}%; variance and std dev are sample statistics (n − 1).
+
+## 8. Cooling-rate sensitivity ({{sens_runs}} runs per value)
+{{alpha_table}}
+
+{{paper_defaults}}
+
+## 9. Neighbour move: swap (paper) vs segment reversal (our extension)
+{{neighbor_table}}
+
+## 10. Hand-worked trace (first moves of the presentation run)
+Initial tour cost: {{initial_cost_calc}}
+
+{{trace_example}}
+
+## 11. Google Maps link for the whole route
+{{gmaps_url}}

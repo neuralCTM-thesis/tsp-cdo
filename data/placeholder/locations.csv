@@ -1,0 +1,10 @@
+id,label,name,short_name,role,address,latitude,longitude,google_maps_url,notes
+0,V0,PLACEHOLDER Depot (Red Cross chapter office),Depot*,depot,PLACEHOLDER - synthetic point,8.474000,124.646000,,synthetic demo vertex
+1,V1,PLACEHOLDER Hospital A,Hosp A*,stop,PLACEHOLDER - synthetic point,8.455220,124.642271,,synthetic demo vertex
+2,V2,PLACEHOLDER Hospital B,Hosp B*,stop,PLACEHOLDER - synthetic point,8.475726,124.672361,,synthetic demo vertex
+3,V3,PLACEHOLDER Hospital C,Hosp C*,stop,PLACEHOLDER - synthetic point,8.464863,124.649306,,synthetic demo vertex
+4,V4,PLACEHOLDER Hospital D,Hosp D*,stop,PLACEHOLDER - synthetic point,8.466136,124.635788,,synthetic demo vertex
+5,V5,PLACEHOLDER Hospital E,Hosp E*,stop,PLACEHOLDER - synthetic point,8.451052,124.671514,,synthetic demo vertex
+6,V6,PLACEHOLDER Hospital F,Hosp F*,stop,PLACEHOLDER - synthetic point,8.447456,124.658543,,synthetic demo vertex
+7,V7,PLACEHOLDER Hospital G,Hosp G*,stop,PLACEHOLDER - synthetic point,8.450543,124.634897,,synthetic demo vertex
+8,V8,PLACEHOLDER Hospital H,Hosp H*,stop,PLACEHOLDER - synthetic point,8.472369,124.616260,,synthetic demo vertex

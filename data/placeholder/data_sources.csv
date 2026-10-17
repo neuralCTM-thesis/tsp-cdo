@@ -1,0 +1,73 @@
+from_label,to_label,from_short_name,to_short_name,distance_km,status,source,measured_date,measured_time,route_summary,assumed_basis,notes
+V0,V1,Depot*,Hosp A*,3.4,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V0,Hosp A*,Depot*,3.4,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V0,V2,Depot*,Hosp B*,4.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V0,Hosp B*,Depot*,4.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V0,V3,Depot*,Hosp C*,1.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V0,Hosp C*,Depot*,1.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V0,V4,Depot*,Hosp D*,2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V0,Hosp D*,Depot*,2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V0,V5,Depot*,Hosp E*,6.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V0,Hosp E*,Depot*,5.8,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V0,V6,Depot*,Hosp F*,5.7,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V0,Hosp F*,Depot*,4.4,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V0,V7,Depot*,Hosp G*,4.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V0,Hosp G*,Depot*,4.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V0,V8,Depot*,Hosp H*,4.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V0,Hosp H*,Depot*,4.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V2,Hosp A*,Hosp B*,5.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V1,Hosp B*,Hosp A*,5.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V3,Hosp A*,Hosp C*,3.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V1,Hosp C*,Hosp A*,1.8,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V4,Hosp A*,Hosp D*,2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V1,Hosp D*,Hosp A*,2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V5,Hosp A*,Hosp E*,5.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V1,Hosp E*,Hosp A*,4.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V6,Hosp A*,Hosp F*,3,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V1,Hosp F*,Hosp A*,3,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V7,Hosp A*,Hosp G*,1.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V1,Hosp G*,Hosp A*,2.3,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V1,V8,Hosp A*,Hosp H*,4.7,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V1,Hosp H*,Hosp A*,4.7,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V3,Hosp B*,Hosp C*,4.3,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V2,Hosp C*,Hosp B*,5.7,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V4,Hosp B*,Hosp D*,7.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V2,Hosp D*,Hosp B*,6.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V5,Hosp B*,Hosp E*,3.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V2,Hosp E*,Hosp B*,4.4,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V6,Hosp B*,Hosp F*,4.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V2,Hosp F*,Hosp B*,4.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V7,Hosp B*,Hosp G*,7.7,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V2,Hosp G*,Hosp B*,9.1,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V2,V8,Hosp B*,Hosp H*,9.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V2,Hosp H*,Hosp B*,9.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V4,Hosp C*,Hosp D*,2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V3,Hosp D*,Hosp C*,2.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V5,Hosp C*,Hosp E*,4.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V3,Hosp E*,Hosp C*,4.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V6,Hosp C*,Hosp F*,3.7,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V3,Hosp F*,Hosp C*,2.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V7,Hosp C*,Hosp G*,3.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V3,Hosp G*,Hosp C*,3.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V3,V8,Hosp C*,Hosp H*,5.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V3,Hosp H*,Hosp C*,5.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V5,Hosp D*,Hosp E*,6.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V4,Hosp E*,Hosp D*,6.3,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V6,Hosp D*,Hosp F*,4.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V4,Hosp F*,Hosp D*,4.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V7,Hosp D*,Hosp G*,2.4,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V4,Hosp G*,Hosp D*,2.4,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V4,V8,Hosp D*,Hosp H*,2.8,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V4,Hosp H*,Hosp D*,2.8,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V6,Hosp E*,Hosp F*,1.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V5,Hosp F*,Hosp E*,1.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V7,Hosp E*,Hosp G*,5.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V5,Hosp G*,Hosp E*,5.9,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V5,V8,Hosp E*,Hosp H*,8.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V5,Hosp H*,Hosp E*,8.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V7,Hosp F*,Hosp G*,4.4,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V6,Hosp G*,Hosp F*,3.6,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V6,V8,Hosp F*,Hosp H*,7.8,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V6,Hosp H*,Hosp F*,7.8,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V7,V8,Hosp G*,Hosp H*,4.2,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
+V8,V7,Hosp H*,Hosp G*,5.5,PLACEHOLDER,SYNTHETIC (haversine x detour factor) - not Google Maps,,,,,placeholder only
