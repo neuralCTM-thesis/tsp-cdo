@@ -1,73 +1,73 @@
 from_label,to_label,from_short_name,to_short_name,distance_km,status,source,measured_date,measured_time,route_summary,assumed_basis,notes
-V0,V1,PRC,ACE,,,,,,,,
-V1,V0,ACE,PRC,,,,,,,,
-V0,V2,PRC,PMP Kausw,,,,,,,,
-V2,V0,PMP Kausw,PRC,,,,,,,,
-V0,V3,PRC,PGH Velez,,,,,,,,
-V3,V0,PGH Velez,PRC,,,,,,,,
-V0,V4,PRC,Sabal,,,,,,,,
-V4,V0,Sabal,PRC,,,,,,,,
-V0,V5,PRC,MRXUH,,,,,,,,
-V5,V0,MRXUH,PRC,,,,,,,,
-V0,V6,PRC,Madonna,,,,,,,,
-V6,V0,Madonna,PRC,,,,,,,,
-V0,V7,PRC,NMMC,,,,,,,,
-V7,V0,NMMC,PRC,,,,,,,,
-V0,V8,PRC,JRBGH,,,,,,,,
-V8,V0,JRBGH,PRC,,,,,,,,
-V1,V2,ACE,PMP Kausw,,,,,,,,
-V2,V1,PMP Kausw,ACE,,,,,,,,
-V1,V3,ACE,PGH Velez,,,,,,,,
-V3,V1,PGH Velez,ACE,,,,,,,,
-V1,V4,ACE,Sabal,,,,,,,,
-V4,V1,Sabal,ACE,,,,,,,,
-V1,V5,ACE,MRXUH,,,,,,,,
-V5,V1,MRXUH,ACE,,,,,,,,
-V1,V6,ACE,Madonna,,,,,,,,
-V6,V1,Madonna,ACE,,,,,,,,
-V1,V7,ACE,NMMC,,,,,,,,
-V7,V1,NMMC,ACE,,,,,,,,
-V1,V8,ACE,JRBGH,,,,,,,,
-V8,V1,JRBGH,ACE,,,,,,,,
-V2,V3,PMP Kausw,PGH Velez,,,,,,,,
-V3,V2,PGH Velez,PMP Kausw,,,,,,,,
-V2,V4,PMP Kausw,Sabal,,,,,,,,
-V4,V2,Sabal,PMP Kausw,,,,,,,,
-V2,V5,PMP Kausw,MRXUH,,,,,,,,
-V5,V2,MRXUH,PMP Kausw,,,,,,,,
-V2,V6,PMP Kausw,Madonna,,,,,,,,
-V6,V2,Madonna,PMP Kausw,,,,,,,,
-V2,V7,PMP Kausw,NMMC,,,,,,,,
-V7,V2,NMMC,PMP Kausw,,,,,,,,
-V2,V8,PMP Kausw,JRBGH,,,,,,,,
-V8,V2,JRBGH,PMP Kausw,,,,,,,,
-V3,V4,PGH Velez,Sabal,,,,,,,,
-V4,V3,Sabal,PGH Velez,,,,,,,,
-V3,V5,PGH Velez,MRXUH,,,,,,,,
-V5,V3,MRXUH,PGH Velez,,,,,,,,
-V3,V6,PGH Velez,Madonna,,,,,,,,
-V6,V3,Madonna,PGH Velez,,,,,,,,
-V3,V7,PGH Velez,NMMC,,,,,,,,
-V7,V3,NMMC,PGH Velez,,,,,,,,
-V3,V8,PGH Velez,JRBGH,,,,,,,,
-V8,V3,JRBGH,PGH Velez,,,,,,,,
-V4,V5,Sabal,MRXUH,,,,,,,,
-V5,V4,MRXUH,Sabal,,,,,,,,
-V4,V6,Sabal,Madonna,,,,,,,,
-V6,V4,Madonna,Sabal,,,,,,,,
-V4,V7,Sabal,NMMC,,,,,,,,
-V7,V4,NMMC,Sabal,,,,,,,,
-V4,V8,Sabal,JRBGH,,,,,,,,
-V8,V4,JRBGH,Sabal,,,,,,,,
-V5,V6,MRXUH,Madonna,,,,,,,,
-V6,V5,Madonna,MRXUH,,,,,,,,
-V5,V7,MRXUH,NMMC,,,,,,,,
-V7,V5,NMMC,MRXUH,,,,,,,,
-V5,V8,MRXUH,JRBGH,,,,,,,,
-V8,V5,JRBGH,MRXUH,,,,,,,,
-V6,V7,Madonna,NMMC,,,,,,,,
-V7,V6,NMMC,Madonna,,,,,,,,
-V6,V8,Madonna,JRBGH,,,,,,,,
-V8,V6,JRBGH,Madonna,,,,,,,,
-V7,V8,NMMC,JRBGH,,,,,,,,
-V8,V7,JRBGH,NMMC,,,,,,,,
+V0,V1,PRC,ACE,1.67,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:15,,,OSRM car profile; distance of its route
+V1,V0,ACE,PRC,1.87,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V0,V2,PRC,PMP Kausw,2.81,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V2,V0,PMP Kausw,PRC,2.94,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V0,V3,PRC,PGH Velez,0.60,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V3,V0,PGH Velez,PRC,0.82,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V0,V4,PRC,Sabal,0.23,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V4,V0,Sabal,PRC,0.23,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V0,V5,PRC,MRXUH,1.62,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V5,V0,MRXUH,PRC,1.66,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V0,V6,PRC,Madonna,2.46,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V6,V0,Madonna,PRC,2.43,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V0,V7,PRC,NMMC,0.14,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V7,V0,NMMC,PRC,0.14,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V0,V8,PRC,JRBGH,3.23,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V8,V0,JRBGH,PRC,3.23,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V1,V2,ACE,PMP Kausw,4.22,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V2,V1,PMP Kausw,ACE,4.35,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V1,V3,ACE,PGH Velez,2.20,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V3,V1,PGH Velez,ACE,2.36,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V1,V4,ACE,Sabal,1.69,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V4,V1,Sabal,ACE,1.68,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V1,V5,ACE,MRXUH,1.26,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V5,V1,MRXUH,ACE,1.21,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V1,V6,ACE,Madonna,4.06,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V6,V1,Madonna,ACE,4.01,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V1,V7,ACE,NMMC,1.89,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V7,V1,NMMC,ACE,1.62,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V1,V8,ACE,JRBGH,4.63,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:16,,,OSRM car profile; distance of its route
+V8,V1,JRBGH,ACE,4.65,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V2,V3,PMP Kausw,PGH Velez,3.25,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V3,V2,PGH Velez,PMP Kausw,3.37,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V2,V4,PMP Kausw,Sabal,2.74,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V4,V2,Sabal,PMP Kausw,2.63,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V2,V5,PMP Kausw,MRXUH,4.58,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V5,V2,MRXUH,PMP Kausw,4.48,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V2,V6,PMP Kausw,Madonna,3.57,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V6,V2,Madonna,PMP Kausw,3.35,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V2,V7,PMP Kausw,NMMC,3.00,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V7,V2,NMMC,PMP Kausw,2.87,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V2,V8,PMP Kausw,JRBGH,3.71,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V8,V2,JRBGH,PMP Kausw,3.63,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V3,V4,PGH Velez,Sabal,0.73,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V4,V3,Sabal,PGH Velez,0.51,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V3,V5,PGH Velez,MRXUH,1.96,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V5,V3,MRXUH,PGH Velez,1.63,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V3,V6,PGH Velez,Madonna,1.85,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V6,V3,Madonna,PGH Velez,1.85,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V3,V7,PGH Velez,NMMC,1.03,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V7,V3,NMMC,PGH Velez,0.80,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V3,V8,PGH Velez,JRBGH,2.37,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V8,V3,JRBGH,PGH Velez,2.37,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V4,V5,Sabal,MRXUH,1.91,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V5,V4,MRXUH,Sabal,1.95,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V4,V6,Sabal,Madonna,2.37,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V6,V4,Madonna,Sabal,2.33,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V4,V7,Sabal,NMMC,0.29,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V7,V4,NMMC,Sabal,0.29,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:17,,,OSRM car profile; distance of its route
+V4,V8,Sabal,JRBGH,3.05,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V8,V4,JRBGH,Sabal,3.03,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V5,V6,MRXUH,Madonna,2.71,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V6,V5,Madonna,MRXUH,2.62,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V5,V7,MRXUH,NMMC,1.63,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V7,V5,NMMC,MRXUH,1.62,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V5,V8,MRXUH,JRBGH,3.22,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V8,V5,JRBGH,MRXUH,3.21,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V6,V7,Madonna,NMMC,2.62,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V7,V6,NMMC,Madonna,2.66,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V6,V8,Madonna,JRBGH,1.00,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V8,V6,JRBGH,Madonna,1.04,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V7,V8,NMMC,JRBGH,3.29,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route
+V8,V7,JRBGH,NMMC,3.29,ACTUAL,OpenStreetMap road network via OSRM car router (router.project-osrm.org),2026-10-17,18:18,,,OSRM car profile; distance of its route

@@ -1,13 +1,12 @@
 # Pre-recording checklist
 
-> ⚠️ **PLACEHOLDER DATA.** Every number in this file comes from the synthetic demo dataset. Enter the real data and rerun `python main.py` before using it.
 
 ## The day before
 - [ ] Real data entered in `data/` and the validator passes: `python main.py --validate`.
 - [ ] The console shows **no** "PLACEHOLDER DATA" banner, and the figures have no red watermark.
 - [ ] `python -m pytest` → all tests pass.
 - [ ] `python main.py --experiments` has been run with the real data (about 3 min); `docs/` shows its tables.
-- [ ] `python main.py --find-demo-seed`, then put the suggested seed into `DEFAULT_SEED` in `src/config.py`. The demo seed reaches the optimum, and its first 5 moves show an improvement, an accepted worse move and a rejection. Current seed: **2**.
+- [ ] `python main.py --find-demo-seed`, then put the suggested seed into `DEFAULT_SEED` in `src/config.py`. The demo seed reaches the optimum, and its first 5 moves show an improvement, an accepted worse move and a rejection. Current seed: **1**.
 - [ ] `python main.py` once more, then `python main.py --check-consistency` → everything PASS.
 - [ ] Slides rebuilt from `docs/slides_outline.md` (numbers copied from `docs/results_tables.md`, not retyped).
 - [ ] Your names, course and section on the title slide.
@@ -26,7 +25,7 @@
 - [ ] Show the input CSVs **before** running the code (the rubric requires input, run and output).
 - [ ] Type the command live: `python main.py --trace`. Do not paste screenshots.
 - [ ] Scroll slowly; pause 2–3 s on the trace, the verification table and the optimality check.
-- [ ] Say the total with units: "**24.8 kilometres**".
+- [ ] Say the total with units: "**14.1 kilometres**".
 - [ ] Say "optimal for this instance, **proven by brute force**", never "SA guarantees the optimum".
 
 ## Timing (target 12:45, allowed 10:00–15:00)
@@ -46,4 +45,4 @@
 - [ ] References in the slides **and** in `REFERENCES.md`.
 
 ---
-_Generated 2026-10-17 09:09 from data fingerprint `af6df0a76c` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._
+_Generated 2026-10-17 18:25 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._

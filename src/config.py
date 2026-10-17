@@ -93,7 +93,7 @@ PAPER_DEFAULTS = SAParams(
 # ---------------------------------------------------------------------------
 # Runs and experiments
 # ---------------------------------------------------------------------------
-DEFAULT_SEED = 2              # seed of the single "presentation" run
+DEFAULT_SEED = 1              # seed of the single "presentation" run
 DEFAULT_RUNS = 30             # independent SA runs for the Table-2 statistics
 FIRST_RUN_SEED = 1            # the 30 runs use seeds 1..30
 CALIBRATION_SEED = 2024       # fixed seed for T0 calibration -> same T0 for every run

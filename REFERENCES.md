@@ -1,6 +1,5 @@
 # References (IEEE style)
 
-> ⚠️ **PLACEHOLDER DATA.** Every number in this file comes from the synthetic demo dataset. Enter the real data and rerun `python main.py` before using it.
 
 ## Assigned paper (algorithm and base code)
 [1] R. Luna-Garcia, T. M. C. Candano, and R. L. Caga-anan, "Performance analysis of classical algorithms for the traveling salesman problem," *The Mindanawan Journal of Mathematics*, vol. 6, no. 2, pp. 79–111, 2024, doi: 10.62071/tmjm.v6i2.716. Used for §2.5, Algorithm 2.5, Theorem 2.5, Table 2 format, Algorithm 2.3 (brute force), Algorithm 2.7 (greedy) and Appendix 4.5 (SA Python code).
@@ -32,13 +31,19 @@
 [13] Pillow contributors, "Pillow (PIL fork)." [Online]. Available: https://python-pillow.org. Version used: 13.0.0 (used for the animated GIF).
 
 ## Data sources
-[14] Google LLC, "Google Maps," Cagayan de Oro City. [Online]. Available: https://www.google.com/maps (driving distances read on n/a (placeholder data)).
+[14] OpenStreetMap contributors, "OpenStreetMap" road network data, Open Database License. [Online]. Available: https://www.openstreetmap.org/copyright (routing queried 2026-10-17 (18:15–18:18, Philippine time)).
+
+[15] D. Luxen and C. Vetter, "Real-time routing with OpenStreetMap data," in *Proc. 19th ACM SIGSPATIAL Int. Conf. Advances in Geographic Information Systems (GIS '11)*, Chicago, IL, USA, 2011, pp. 513–516, doi: 10.1145/2093973.2094062. Service used: OSRM demo server https://router.project-osrm.org (car profile).
+
+[16] Nominatim, "OpenStreetMap geocoder." [Online]. Available: https://nominatim.org (coordinates of the places marked in `data/locations.csv`).
+
+[17] Google LLC, "Google Maps," Cagayan de Oro City. [Online]. Available: https://www.google.com/maps (place coordinates).
 
 Base-map tiles of `route_map.html` and `fig3_route_map.png`: © OpenStreetMap contributors. One row per distance (source, date, time) is in `data/data_sources.csv`.
 
 ## How our code relates to [1] Appendix 4.5
 Our `src/simulated_annealing.py` follows the structure of the paper's SA code: a random initial tour, a swap neighbour, the Metropolis acceptance `new < current or random() < exp((current − new)/T)`, geometric cooling `T *= cooling_rate`, two nested loops, and best-so-far tracking. Our modifications:
-1. Input is a **directed distance matrix** (driving km, PLACEHOLDER DATA) instead of (x, y) coordinates with Euclidean distance; costs may differ by direction.
+1. Input is a **directed distance matrix** (driving km, OpenStreetMap/OSRM) instead of (x, y) coordinates with Euclidean distance; costs may differ by direction.
 2. The **depot is fixed** at position 0; only the hospitals are permuted, and the tour always closes at the depot.
 3. **Parameters tuned** to our data: T0 calibrated to the km scale (P ≈ 0.8 for an average worse move), α = 0.98, 200 moves per level, T_stop = 0.001 km, chosen with a sensitivity experiment, against the paper's T0 = 1000, α = 0.995, 1000 moves/level, T_stop = 1e-8.
 4. The **extra stopping rules** named in the paper's text (no improvement / maximum iterations).
@@ -47,4 +52,4 @@ Our `src/simulated_annealing.py` follows the structure of the paper's SA code: a
 7. An optional **segment-reversal ("2-opt") neighbour** (our extension, off by default).
 
 ---
-_Generated 2026-10-17 09:09 from data fingerprint `af6df0a76c` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/REFERENCES.md.tmpl` instead._
+_Generated 2026-10-17 18:25 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/REFERENCES.md.tmpl` instead._

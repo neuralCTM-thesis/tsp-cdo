@@ -6,7 +6,7 @@ A Philippine Red Cross Misamis Oriental courier (illustrative scenario) leaves t
 
 We then **prove** whether the result is optimal: brute force runs on the same matrix, the route is recounted edge by edge, and SA is run with 30 seeds.
 
-> **Data status.** Until `data/*.csv` are filled in (OpenStreetMap routing via `python main.py --fetch-osm`, or Google Maps by hand), the program runs on a clearly labelled **PLACEHOLDER** dataset (`data/placeholder/`). It prints a large warning and watermarks every figure. See [`docs/data_collection_guide.md`](docs/data_collection_guide.md).
+> **Data status.** `data/*.csv` hold real data: OpenStreetMap coordinates for all 9 places and 72 directed OSRM car-route distances, fetched with `python main.py --fetch-osm` on 2026-10-17. Three places (the Red Cross chapter, Maria Reyna-Xavier University Hospital and J.R. Borja) were found on OpenStreetMap under alternate names; `locations.csv` notes the source of each. If `data/*.csv` are emptied, the program falls back to a clearly labelled **PLACEHOLDER** dataset (`data/placeholder/`). See [`docs/data_collection_guide.md`](docs/data_collection_guide.md).
 
 ---
 
