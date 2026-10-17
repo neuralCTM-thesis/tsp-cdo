@@ -144,7 +144,7 @@ Initial random tour cost (Alg 2.5 step 2):
 **Advantages**
 - Escapes local optima by sometimes accepting worse tours (unlike greedy or pure hill-climbing).
 - Simple: the whole method is one short function (`simulated_annealing()`), with no gradients and no problem-specific rules.
-- Fast in practice: about 88 ms per run on our data (30-run mean).
+- Fast in practice: about 90 ms per run on our data (30-run mean).
 - Works directly on a distance matrix, including **asymmetric** (one-way) distances.
 
 **Limitations**
@@ -225,12 +225,12 @@ Initial random tour cost (Alg 2.5 step 2):
 
 | Algorithm | Best | Worst | Average | Variance | Std Dev | Avg time | Hit optimum |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.0885 s | 100% |
-| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0220 s | 100% |
+| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.0899 s | 100% |
+| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0249 s | 100% |
 | Greedy | 15.37 | 15.37 | 15.370 | 0 | 0 | 0.0000 s | 0% |
 
 - Visuals: `fig7_runs_vs_optimum.png`, `fig8_search_space.png` (all 40,320 tours).
-- Honest note: at n = 9, brute force takes 0.02 s and one SA run about 88 ms, so exhaustive search is still cheap at this size. SA earns its place as n grows: with 20 stops brute force would need 19! ≈ 1.2 × 10¹⁷ tours, while SA's work grows only with the number of moves × n.
+- Honest note: at n = 9, brute force takes 0.02 s and one SA run about 90 ms, so exhaustive search is still cheap at this size. SA earns its place as n grows: with 20 stops brute force would need 19! ≈ 1.2 × 10¹⁷ tours, while SA's work grows only with the number of moves × n.
 
 ### D4 · How SA got there (11:00–11:30)
 - `fig4_convergence.png`: the current tour jumps around at high T, then settles; the best tour reaches 14.1 km at move 10,506. The current tour can end above the best one, which is why line 13 returns the best-so-far tour.
@@ -261,4 +261,4 @@ Initial random tour cost (Alg 2.5 step 2):
 See `REFERENCES.md` (the paper, Metropolis 1953, Kirkpatrick 1983, Černý 1985, Hajek 1988, NetworkX, Matplotlib, Folium, and the data sources with access dates).
 
 ---
-_Generated 2026-10-17 18:49 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/slides_outline.md.tmpl` instead._
+_Generated 2026-10-17 18:56 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/slides_outline.md.tmpl` instead._

@@ -45,4 +45,4 @@
 - [ ] References in the slides **and** in `REFERENCES.md`.
 
 ---
-_Generated 2026-10-17 18:49 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._
+_Generated 2026-10-17 18:56 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._
