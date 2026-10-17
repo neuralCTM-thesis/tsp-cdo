@@ -7,9 +7,9 @@ Target length **12–13 min** (PIT allows 10–15). Section timing follows the P
 |---|---|---|
 | A. Introduction, problem, objective | A1–A4 | 0:00–2:30 |
 | B. Assigned algorithm (Simulated Annealing) | B1–B6 | 2:30–5:15 |
-| C. Graph model, data, methodology | C1–C3 | 5:15–7:45 |
-| D. Python execution and results (live) | D1–D4 | 7:45–11:30 |
-| E. Conclusion and references | E1–E3 | 11:30–12:45 |
+| C. Graph model, data, methodology | C1–C4 | 5:15–8:05 |
+| D. Python execution and results (live) | D1–D4 | 8:05–11:50 |
+| E. Conclusion and references | E1–E3 | 11:50–13:05 |
 
 Figures are in `outputs/`. Every figure, table and number below comes from the same data (fingerprint `{{fingerprint}}`).
 
@@ -27,7 +27,7 @@ Figures are in `outputs/`. Every figure, table and number below comes from the s
 - Illustrative scenario: a **Philippine Red Cross Misamis Oriental** courier leaves the chapter office with blood units, delivers to **{{n_hospitals}} hospitals** in Cagayan de Oro City, **each exactly once**, and returns to base.
 - Why this is a TSP: one vehicle, a fixed set of stops, a closed tour, and a total length to minimise.
 - Why it matters: shorter routes mean blood reaches hospitals sooner and the vehicle uses less fuel.
-- Visual: `outputs/route_map.html` (screenshot showing only the markers) or `fig3_route_map.png`.
+- Visual: `fig0_locations_map.png` (the locations only; the route stays hidden until D2).
 
 ### A3 · Locations (vertices) (1:00–1:45)
 - Start and end: **V0 = {{depot_name}}** (depot).
@@ -121,7 +121,7 @@ Initial random tour cost (Alg 2.5 step 2):
 
 ---
 
-## C. Graph model, data and methodology (2:30)
+## C. Graph model, data and methodology (2:50)
 
 ### C1 · Graph model (5:15–6:05)
 - **G = (V, A)**, a complete **directed** weighted graph.
@@ -135,6 +135,7 @@ Initial random tour cost (Alg 2.5 step 2):
 - Visual: `fig2_weight_matrix.png` (row = FROM, column = TO).
 - **Sources:** {{distance_method}}. Coordinates: {{coord_source}}.
 - **Actual vs assumed:** {{status_summary}} (`data/data_sources.csv`). Assumed cells are hatched and marked * in the matrix.
+- Quality checks: {{asym_pairs}} of {{n_pairs}} pairs differ by direction; {{triangle_breaks}} triangle-inequality breaks above 0.1 km, listed in `outputs/data_quality.csv` and checked by hand (one-way streets, not typos).
 - The validator checks: square matrix, zero diagonal, positive distances, ids match `locations.csv`, matrix = `data_sources.csv`.
 
 ### C3 · Methodology and parameter choice (6:55–7:45)
@@ -155,24 +156,49 @@ Initial random tour cost (Alg 2.5 step 2):
 
 {{alpha_table}}
 
+
+### C4 · Implementation: main code components (7:45–8:05)
+| Module (`src/`) | Role |
+|---|---|
+| `data_loader.py` | read and validate the CSVs (square, zero diagonal, positive, ids) |
+| `graph_model.py` | networkx DiGraph; `tour_cost()` sums the arcs of a closed tour |
+| `simulated_annealing.py` | **the algorithm**: `random_tour`, `swap_two_cities`, `metropolis`, `simulated_annealing` |
+| `baselines.py` | brute force (Alg 2.3) and greedy (Alg 2.7) on the same matrix |
+| `verify.py` | tour rules + independent edge-by-edge recount |
+| `experiments.py`, `visualize.py`, `maps.py` | 30 runs, α study, figures and maps |
+
+The core of `simulated_annealing()`, shortened (trace and history lines left out; in the file every line is commented with its Alg 2.5 step):
+```python
+for _ in range(params.iterations_per_temperature):   # inner loop
+    new_tour, positions = make_move(current, rng)     # step 4
+    new_cost = tour_cost(new_tour, D)                 # step 5
+    delta = new_cost - current_cost
+    accepted, p, r = metropolis(delta, T, rng)        # steps 6-10
+    if accepted:
+        current, current_cost = new_tour, new_cost
+        if current_cost < best_cost:                  # best-so-far (step 13)
+            best, best_cost = current.copy(), current_cost
+T *= params.alpha                                     # step 11
+```
+
 ---
 
 ## D. Python execution and results (3:45, mostly the live screen recording)
 
-### D1 · Live run (7:45–9:45): see `docs/narration_script.md`
+### D1 · Live run (8:05–10:05): see `docs/narration_script.md`
 1. Show `data/locations.csv` and `data/distance_matrix.csv` (the input).
 2. `python main.py --trace`: validation, input tables, the first 5 SA moves, the result.
 3. Show the verification table and the brute-force check in the console.
 4. Open `outputs/route_map.html` and the figures.
 
-### D2 · Result route (9:45–10:25)
+### D2 · Result route (10:05–10:45)
 - **Route:** {{sa_route}}
 - **Names:** {{sa_route_names}}
 - **Total distance: {{sa_cost}} km** (the initial random tour was {{initial_cost}} km)
 - Verification ({{verification_passed}}): {{verification_sum}}
 - Visual: `fig3_route_map.png` (or the live `route_map.html`) and `fig1b_route_on_graph.png`.
 
-### D3 · Is it optimal? (10:25–11:00)
+### D3 · Is it optimal? (10:45–11:20)
 - {{optimality_statement}}
 - {{ties_note}}
 - Same matrix, other methods: greedy nearest neighbour **{{greedy_cost}} km** (+{{greedy_gap}}%); average random tour **{{mean_random}} km**; worst tour {{worst_tour}} km.
@@ -183,7 +209,7 @@ Initial random tour cost (Alg 2.5 step 2):
 - Visuals: `fig7_runs_vs_optimum.png`, `fig8_search_space.png` (all {{n_tours}} tours).
 - Honest note: at n = {{n}}, brute force takes {{bf_runtime}} s and one SA run about {{mean_runtime_ms}} ms, so exhaustive search is still cheap at this size. SA earns its place as n grows: with 20 stops brute force would need 19! ≈ 1.2 × 10¹⁷ tours, while SA's work grows only with the number of moves × n.
 
-### D4 · How SA got there (11:00–11:30)
+### D4 · How SA got there (11:20–11:50)
 - `fig4_convergence.png`: the current tour jumps around at high T, then settles; the best tour reaches {{sa_cost}} km at move {{best_found_at}}. The current tour can end above the best one, which is why line 13 returns the best-so-far tour.
 - `fig5_acceptance.png`: the share of worse moves accepted falls from about {{target_p}} to 0 as T drops, matching the theory e^(−Δ/T).
 - `fig6_sa_animation.gif`: the search in motion.
@@ -195,15 +221,15 @@ Initial random tour cost (Alg 2.5 step 2):
 
 ## E. Conclusion and references (1:15)
 
-### E1 · Conclusion (11:30–12:00)
+### E1 · Conclusion (11:50–12:20)
 - The courier's route: **{{sa_route_names}} = {{sa_cost}} km**.
 - That is {{save_vs_random_km}} km ({{save_vs_random_pct}}%) shorter than an average random order, and {{save_vs_greedy_km}} km ({{save_vs_greedy_pct}}%) shorter than the greedy route.
 - {{interpretation}}
 - {{optimal_claim_spoken}}
 
-### E2 · Limitations and improvements (12:00–12:25)
+### E2 · Limitations and improvements (12:20–12:45)
 - Limitations: distances are static (no traffic, time of day, or road closures); no time windows; one vehicle; {{route_dependency}}; small n.
 - Improvements: minimise travel *time* with traffic; time windows for urgent hospitals; several vehicles (VRP); an SA + 2-opt hybrid; adaptive cooling; the Google Distance Matrix API to collect larger n automatically.
 
-### E3 · References (12:25–12:45)
+### E3 · References (12:45–13:05)
 See `REFERENCES.md` (the paper, Metropolis 1953, Kirkpatrick 1983, Černý 1985, Hajek 1988, NetworkX, Matplotlib, Folium, and the data sources with access dates).

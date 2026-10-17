@@ -7,9 +7,9 @@ Target length **12–13 min** (PIT allows 10–15). Section timing follows the P
 |---|---|---|
 | A. Introduction, problem, objective | A1–A4 | 0:00–2:30 |
 | B. Assigned algorithm (Simulated Annealing) | B1–B6 | 2:30–5:15 |
-| C. Graph model, data, methodology | C1–C3 | 5:15–7:45 |
-| D. Python execution and results (live) | D1–D4 | 7:45–11:30 |
-| E. Conclusion and references | E1–E3 | 11:30–12:45 |
+| C. Graph model, data, methodology | C1–C4 | 5:15–8:05 |
+| D. Python execution and results (live) | D1–D4 | 8:05–11:50 |
+| E. Conclusion and references | E1–E3 | 11:50–13:05 |
 
 Figures are in `outputs/`. Every figure, table and number below comes from the same data (fingerprint `c652b67ace`).
 
@@ -27,7 +27,7 @@ Figures are in `outputs/`. Every figure, table and number below comes from the s
 - Illustrative scenario: a **Philippine Red Cross Misamis Oriental** courier leaves the chapter office with blood units, delivers to **8 hospitals** in Cagayan de Oro City, **each exactly once**, and returns to base.
 - Why this is a TSP: one vehicle, a fixed set of stops, a closed tour, and a total length to minimise.
 - Why it matters: shorter routes mean blood reaches hospitals sooner and the vehicle uses less fuel.
-- Visual: `outputs/route_map.html` (screenshot showing only the markers) or `fig3_route_map.png`.
+- Visual: `fig0_locations_map.png` (the locations only; the route stays hidden until D2).
 
 ### A3 · Locations (vertices) (1:00–1:45)
 - Start and end: **V0 = Philippine Red Cross Misamis Oriental-Cagayan de Oro Chapter** (depot).
@@ -144,7 +144,7 @@ Initial random tour cost (Alg 2.5 step 2):
 **Advantages**
 - Escapes local optima by sometimes accepting worse tours (unlike greedy or pure hill-climbing).
 - Simple: the whole method is one short function (`simulated_annealing()`), with no gradients and no problem-specific rules.
-- Fast in practice: about 90 ms per run on our data (30-run mean).
+- Fast in practice: about 88 ms per run on our data (30-run mean).
 - Works directly on a distance matrix, including **asymmetric** (one-way) distances.
 
 **Limitations**
@@ -161,7 +161,7 @@ Initial random tour cost (Alg 2.5 step 2):
 
 ---
 
-## C. Graph model, data and methodology (2:30)
+## C. Graph model, data and methodology (2:50)
 
 ### C1 · Graph model (5:15–6:05)
 - **G = (V, A)**, a complete **directed** weighted graph.
@@ -175,6 +175,7 @@ Initial random tour cost (Alg 2.5 step 2):
 - Visual: `fig2_weight_matrix.png` (row = FROM, column = TO).
 - **Sources:** the length of the route chosen by the OSRM car router on the OpenStreetMap road network, one request per direction, obtained on 2026-10-17 (18:15–18:18, Philippine time). Coordinates: OpenStreetMap (Nominatim geocoder and Overpass API).
 - **Actual vs assumed:** 72 ACTUAL (`data/data_sources.csv`). Assumed cells are hatched and marked * in the matrix.
+- Quality checks: 29 of 36 pairs differ by direction; 6 triangle-inequality breaks above 0.1 km, listed in `outputs/data_quality.csv` and checked by hand (one-way streets, not typos).
 - The validator checks: square matrix, zero diagonal, positive distances, ids match `locations.csv`, matrix = `data_sources.csv`.
 
 ### C3 · Methodology and parameter choice (6:55–7:45)
@@ -200,24 +201,49 @@ Initial random tour cost (Alg 2.5 step 2):
 | 0.98 | 436 | 57,042 | 14.100 | 0.000 | 100% | 234 ms |
 | 0.995 | 1755 | 205,076 | 14.100 | 0.000 | 100% | 692 ms |
 
+
+### C4 · Implementation: main code components (7:45–8:05)
+| Module (`src/`) | Role |
+|---|---|
+| `data_loader.py` | read and validate the CSVs (square, zero diagonal, positive, ids) |
+| `graph_model.py` | networkx DiGraph; `tour_cost()` sums the arcs of a closed tour |
+| `simulated_annealing.py` | **the algorithm**: `random_tour`, `swap_two_cities`, `metropolis`, `simulated_annealing` |
+| `baselines.py` | brute force (Alg 2.3) and greedy (Alg 2.7) on the same matrix |
+| `verify.py` | tour rules + independent edge-by-edge recount |
+| `experiments.py`, `visualize.py`, `maps.py` | 30 runs, α study, figures and maps |
+
+The core of `simulated_annealing()`, shortened (trace and history lines left out; in the file every line is commented with its Alg 2.5 step):
+```python
+for _ in range(params.iterations_per_temperature):   # inner loop
+    new_tour, positions = make_move(current, rng)     # step 4
+    new_cost = tour_cost(new_tour, D)                 # step 5
+    delta = new_cost - current_cost
+    accepted, p, r = metropolis(delta, T, rng)        # steps 6-10
+    if accepted:
+        current, current_cost = new_tour, new_cost
+        if current_cost < best_cost:                  # best-so-far (step 13)
+            best, best_cost = current.copy(), current_cost
+T *= params.alpha                                     # step 11
+```
+
 ---
 
 ## D. Python execution and results (3:45, mostly the live screen recording)
 
-### D1 · Live run (7:45–9:45): see `docs/narration_script.md`
+### D1 · Live run (8:05–10:05): see `docs/narration_script.md`
 1. Show `data/locations.csv` and `data/distance_matrix.csv` (the input).
 2. `python main.py --trace`: validation, input tables, the first 5 SA moves, the result.
 3. Show the verification table and the brute-force check in the console.
 4. Open `outputs/route_map.html` and the figures.
 
-### D2 · Result route (9:45–10:25)
+### D2 · Result route (10:05–10:45)
 - **Route:** V0 → V7 → V1 → V5 → V3 → V6 → V8 → V2 → V4 → V0
 - **Names:** PRC → NMMC → ACE → MRXUH → PGH Velez → Madonna → JRBGH → PMP Kausw → Sabal → PRC
 - **Total distance: 14.1 km** (the initial random tour was 16.32 km)
 - Verification (PASS): 0.14 + 1.62 + 1.26 + 1.63 + 1.85 + 1.0 + 3.63 + 2.74 + 0.23 = **14.1 km**
 - Visual: `fig3_route_map.png` (or the live `route_map.html`) and `fig1b_route_on_graph.png`.
 
-### D3 · Is it optimal? (10:25–11:00)
+### D3 · Is it optimal? (10:45–11:20)
 - The SA route (14.1 km) is **optimal for this instance**. This is proven by brute force, which checked all 40,320 possible tours and found no shorter one. SA by itself does not guarantee optimality; the proof comes from the exhaustive search.
 - The optimal tour is unique.
 - Same matrix, other methods: greedy nearest neighbour **15.37 km** (+9.0%); average random tour **20.79 km**; worst tour 25.52 km.
@@ -225,14 +251,14 @@ Initial random tour cost (Alg 2.5 step 2):
 
 | Algorithm | Best | Worst | Average | Variance | Std Dev | Avg time | Hit optimum |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.0899 s | 100% |
-| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0249 s | 100% |
+| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.0881 s | 100% |
+| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0221 s | 100% |
 | Greedy | 15.37 | 15.37 | 15.370 | 0 | 0 | 0.0000 s | 0% |
 
 - Visuals: `fig7_runs_vs_optimum.png`, `fig8_search_space.png` (all 40,320 tours).
-- Honest note: at n = 9, brute force takes 0.02 s and one SA run about 90 ms, so exhaustive search is still cheap at this size. SA earns its place as n grows: with 20 stops brute force would need 19! ≈ 1.2 × 10¹⁷ tours, while SA's work grows only with the number of moves × n.
+- Honest note: at n = 9, brute force takes 0.02 s and one SA run about 88 ms, so exhaustive search is still cheap at this size. SA earns its place as n grows: with 20 stops brute force would need 19! ≈ 1.2 × 10¹⁷ tours, while SA's work grows only with the number of moves × n.
 
-### D4 · How SA got there (11:00–11:30)
+### D4 · How SA got there (11:20–11:50)
 - `fig4_convergence.png`: the current tour jumps around at high T, then settles; the best tour reaches 14.1 km at move 10,506. The current tour can end above the best one, which is why line 13 returns the best-so-far tour.
 - `fig5_acceptance.png`: the share of worse moves accepted falls from about 0.8 to 0 as T drops, matching the theory e^(−Δ/T).
 - `fig6_sa_animation.gif`: the search in motion.
@@ -247,18 +273,18 @@ Initial random tour cost (Alg 2.5 step 2):
 
 ## E. Conclusion and references (1:15)
 
-### E1 · Conclusion (11:30–12:00)
+### E1 · Conclusion (11:50–12:20)
 - The courier's route: **PRC → NMMC → ACE → MRXUH → PGH Velez → Madonna → JRBGH → PMP Kausw → Sabal → PRC = 14.1 km**.
 - That is 6.69 km (32%) shorter than an average random order, and 1.27 km (8.3%) shorter than the greedy route.
 - The route makes sense on the map: it visits each part of the city once and never doubles back. It leaves the Capitol compound through NMMC, next door, swings east to ACE in Lapasan and south to Maria Reyna in Camaman-an, then comes back through downtown at Polymedic on Velez Street. It then crosses the river to Carmen, where Madonna and J.R. Borja are only 1 kilometre apart on the same street, continues north to Polymedic in Kauswagan, the most remote stop, and returns to Sabal, beside the Red Cross office, for the last 0.23 kilometres. The greedy route does the opposite: it takes the nearest hospitals first and leaves Kauswagan for last, so it has to drive 4.22 kilometres from ACE on the east side to reach it.
 - Because brute force checked every possible tour, this route is proven optimal for this instance. The proof comes from the exhaustive search, not from Simulated Annealing itself.
 
-### E2 · Limitations and improvements (12:00–12:25)
+### E2 · Limitations and improvements (12:20–12:45)
 - Limitations: distances are static (no traffic, time of day, or road closures); no time windows; one vehicle; we depend on OpenStreetMap's road data and on OSRM's choice of route; small n.
 - Improvements: minimise travel *time* with traffic; time windows for urgent hospitals; several vehicles (VRP); an SA + 2-opt hybrid; adaptive cooling; the Google Distance Matrix API to collect larger n automatically.
 
-### E3 · References (12:25–12:45)
+### E3 · References (12:45–13:05)
 See `REFERENCES.md` (the paper, Metropolis 1953, Kirkpatrick 1983, Černý 1985, Hajek 1988, NetworkX, Matplotlib, Folium, and the data sources with access dates).
 
 ---
-_Generated 2026-10-17 18:56 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/slides_outline.md.tmpl` instead._
+_Generated 2026-10-17 19:10 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/slides_outline.md.tmpl` instead._

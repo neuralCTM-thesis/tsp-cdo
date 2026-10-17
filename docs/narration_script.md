@@ -1,4 +1,4 @@
-# Narration script, about 12:45
+# Narration script, about 13:05
 
 
 How to read this script:
@@ -50,7 +50,7 @@ Here is the rule on our real data, taken from the trace of our run. [Read the fi
 
 **4:35 [SHOW] Slide B5, advantages and limitations**
 
-The advantages: it escapes local optima, it is simple, it is fast, about 90 milliseconds per run here, and it works directly with one-way distances. The limitations: it depends on its parameters, its answer can change from run to run, and in practice it does not guarantee the optimum. Convergence is only proven for logarithmically slow cooling, which nobody can wait for.
+The advantages: it escapes local optima, it is simple, it is fast, about 88 milliseconds per run here, and it works directly with one-way distances. The limitations: it depends on its parameters, its answer can change from run to run, and in practice it does not guarantee the optimum. Convergence is only proven for logarithmically slow cooling, which nobody can wait for.
 
 **4:55 [SHOW] Slide B6, optimality and complexity**
 
@@ -58,7 +58,7 @@ So Simulated Annealing is an approximate, heuristic method. Theorem 2.5 says the
 
 ---
 
-## C. Graph model, data, methodology (5:15–7:45)
+## C. Graph model, data, methodology (5:15–8:05)
 
 **5:15 [SHOW] Slide C1, fig1_graph.png**
 
@@ -72,57 +72,62 @@ This is the weight matrix: row is "from", column is "to". The source is the leng
 
 How did we choose the parameters? The starting temperature is calibrated to our units: an average worse move of 1.47 kilometres is accepted with probability 0.8 at the start. We stop at 0.001 kilometres, where even a 100-metre detour is essentially never accepted. For the cooling rate we compared several values on the same seeds. α = 0.98 reached the optimum in 100% of 100 runs in 234 ms per run; see the table for the faster/slower alternatives. The paper's defaults also work, but they take about five million moves.
 
+
+**7:45 [SHOW] Slide C4, implementation**
+
+Our code is split into small modules. The data loader reads and validates the CSV files, the graph model builds the directed graph and computes a tour's cost, and the Simulated Annealing module is the algorithm itself. The baselines module holds brute force and greedy, and verify recounts the route independently. At the heart of it, the inner loop proposes a swap, metropolis decides, and T is multiplied by alpha after each level.
+
 ---
 
-## D. Live Python run and results (7:45–11:30)
+## D. Live Python run and results (8:05–11:50)
 
-**7:45 [SHOW] VS Code or terminal, font at least 18 pt. Open `data/locations.csv`, then `data/distance_matrix.csv`.**
+**8:05 [SHOW] VS Code or terminal, font at least 18 pt. Open `data/locations.csv`, then `data/distance_matrix.csv`.**
 
 This is our input data, exactly as collected: the locations with their coordinates, and the directed distance matrix in kilometres.
 
-**8:10 [TYPE]** `python main.py --trace`
+**8:30 [TYPE]** `python main.py --trace`
 
-**8:15 [SHOW] scroll slowly through the console output**
+**8:35 [SHOW] scroll slowly through the console output**
 
 First the program validates the data and prints its fingerprint, `c652b67ace`, which is also stamped on every figure. Then it prints the inputs and the parameters. Here is the trace of the first five moves: the current tour, the swap, the new tour, delta, the temperature, the probability, the random number and the decision. These are the numbers from our worked example.
 
-**9:00 [SHOW] "SIMULATED ANNEALING RESULT" block**
+**9:20 [SHOW] "SIMULATED ANNEALING RESULT" block**
 
 The best tour found is V0 → V7 → V1 → V5 → V3 → V6 → V8 → V2 → V4 → V0, a total of **14.1 kilometres**. The random starting tour was 16.32 kilometres.
 
-**9:15 [SHOW] "VERIFICATION" block**
+**9:35 [SHOW] "VERIFICATION" block**
 
 Now we check the answer independently. The route starts and ends at the depot, has 10 entries (9 stops plus the return), and visits every hospital exactly once: all pass. Then we add the route up edge by edge from the graph's weights: 0.14 + 1.62 + 1.26 + 1.63 + 1.85 + 1.0 + 3.63 + 2.74 + 0.23 = **14.1 km**. That equals the total that Simulated Annealing reported.
 
-**9:45 [SHOW] "OPTIMALITY CHECK" and "30 INDEPENDENT SA RUNS" blocks**
+**10:05 [SHOW] "OPTIMALITY CHECK" and "30 INDEPENDENT SA RUNS" blocks**
 
 Is it optimal? Simulated Annealing cannot tell us. So we ran brute force on the same matrix, checking all 40,320 possible tours. The shortest possible tour is 14.1 kilometres. That is exactly our Simulated Annealing result, so our route is optimal for this instance, and the proof is the exhaustive search. For comparison, the greedy nearest-neighbour route is 15.37 kilometres, and an average random order is 20.79 kilometres. We also ran Simulated Annealing 30 times with different seeds, in the same format as the paper's Table 2: it reached the optimum 30 out of 30 times.
 
-**10:25 [SHOW] open `outputs/route_map.html` in the browser; then `fig4_convergence.png`, `fig5_acceptance.png`, and the GIF**
+**10:45 [SHOW] open `outputs/route_map.html` in the browser; then `fig4_convergence.png`, `fig5_acceptance.png`, and the GIF**
 
 Here is the route on the map. The numbers are the visiting order and the arrows show the direction. This link opens the same route in Google Maps. The convergence plot shows the current tour jumping around while the temperature is high and settling as it cools. The best tour reached 14.1 kilometres at move 10,506. The acceptance plot shows the share of worse moves accepted falling from about 0.8 to zero, exactly as e to the minus delta over T predicts.
 
-**11:15 [SHOW] `src/simulated_annealing.py`, the main loop**
+**11:35 [SHOW] `src/simulated_annealing.py`, the main loop**
 
 Briefly, the code: the inner loop makes the moves, `metropolis` applies the acceptance rule, `T *= alpha` cools, and every line is commented with its step number from Algorithm 2.5.
 
 ---
 
-## E. Conclusion and references (11:30–12:45)
+## E. Conclusion and references (11:50–13:05)
 
-**11:30 [SHOW] Slide E1**
+**11:50 [SHOW] Slide E1**
 
 So the courier should drive PRC → NMMC → ACE → MRXUH → PGH Velez → Madonna → JRBGH → PMP Kausw → Sabal → PRC, a total of 14.1 kilometres. That is 6.69 kilometres shorter than an average random order and 1.27 kilometres shorter than the greedy route. The route makes sense on the map: it visits each part of the city once and never doubles back. It leaves the Capitol compound through NMMC, next door, swings east to ACE in Lapasan and south to Maria Reyna in Camaman-an, then comes back through downtown at Polymedic on Velez Street. It then crosses the river to Carmen, where Madonna and J.R. Borja are only 1 kilometre apart on the same street, continues north to Polymedic in Kauswagan, the most remote stop, and returns to Sabal, beside the Red Cross office, for the last 0.23 kilometres. The greedy route does the opposite: it takes the nearest hospitals first and leaves Kauswagan for last, so it has to drive 4.22 kilometres from ACE on the east side to reach it. Because brute force checked every possible tour, this route is proven optimal for this instance. The proof comes from the exhaustive search, not from Simulated Annealing itself.
 
-**12:00 [SHOW] Slide E2**
+**12:20 [SHOW] Slide E2**
 
 Our limitations: distances are static, with no traffic or time windows; there is one vehicle; we depend on OpenStreetMap's road data and on OSRM's choice of route; and the instance is small. Natural next steps are minimising travel time with live traffic, adding time windows for urgent hospitals, using several vehicles, combining Simulated Annealing with 2-opt, and using the Google Distance Matrix API to scale up.
 
-**12:25 [SHOW] Slide E3, references**
+**12:45 [SHOW] Slide E3, references**
 
 Our references are on screen: the assigned paper, whose Appendix code is the basis of ours, the original Simulated Annealing papers, the Python libraries we used, and OpenStreetMap/OSRM as our data source. Thank you.
 
-**12:45 End.**
+**13:05 End.**
 
 ---
-_Generated 2026-10-17 18:56 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/narration_script.md.tmpl` instead._
+_Generated 2026-10-17 19:10 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/narration_script.md.tmpl` instead._

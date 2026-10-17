@@ -1,7 +1,7 @@
 # Results tables (copy these into the slides)
 
 
-Data fingerprint `c652b67ace`; generated 2026-10-17 18:56.
+Data fingerprint `c652b67ace`; generated 2026-10-17 19:10.
 
 ## 1. Vertices
 | Vertex | Name | Short name | Role | Address | Lat, Lon |
@@ -46,7 +46,7 @@ Data fingerprint `c652b67ace`; generated 2026-10-17 18:56.
 - Route: **V0 → V7 → V1 → V5 → V3 → V6 → V8 → V2 → V4 → V0**
 - Names: PRC → NMMC → ACE → MRXUH → PGH Velez → Madonna → JRBGH → PMP Kausw → Sabal → PRC
 - Total: **14.1 km** (initial random tour 16.32 km: V0 → V4 → V7 → V2 → V6 → V8 → V1 → V5 → V3 → V0)
-- 56,200 moves in 281 levels; best found at move 10,506; stopped because: no improvement for 228 temperature levels (T fell 100x); 111 ms.
+- 56,200 moves in 281 levels; best found at move 10,506; stopped because: no improvement for 228 temperature levels (T fell 100x); 101 ms.
 
 ## 5. Verification (edge by edge)
 - ✅ starts at depot (first vertex = 0)
@@ -78,8 +78,8 @@ The SA route (14.1 km) is **optimal for this instance**. This is proven by brute
 ## 7. 30 independent runs (paper Table 2 format, km)
 | Algorithm | Best | Worst | Average | Variance | Std Dev | Avg time | Hit optimum |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.0899 s | 100% |
-| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0249 s | 100% |
+| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.0881 s | 100% |
+| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0221 s | 100% |
 | Greedy | 15.37 | 15.37 | 15.370 | 0 | 0 | 0.0000 s | 0% |
 
 Mean gap 0.00%, worst gap 0.00%; variance and std dev are sample statistics (n − 1).
@@ -139,6 +139,7 @@ Initial tour cost: d(V0,V4) + d(V4,V7) + d(V7,V2) + d(V2,V6) + d(V6,V8) + d(V8,V
 - r = 0.4454 → r < P → **ACCEPT** the worse tour
 
 ## 11. Google Maps link for the whole route
+https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=8.484769,124.649264&destination=8.484769,124.649264&waypoints=8.485392,124.649638%7C8.480921,124.659294%7C8.476308,124.655197%7C8.482427,124.645639%7C8.477215,124.635234%7C8.481707,124.628092%7C8.498281,124.630430%7C8.486151,124.647875
 
 ---
-_Generated 2026-10-17 18:56 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/results_tables.md.tmpl` instead._
+_Generated 2026-10-17 19:10 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/results_tables.md.tmpl` instead._

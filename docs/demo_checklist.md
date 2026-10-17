@@ -28,15 +28,15 @@
 - [ ] Say the total with units: "**14.1 kilometres**".
 - [ ] Say "optimal for this instance, **proven by brute force**", never "SA guarantees the optimum".
 
-## Timing (target 12:45, allowed 10:00–15:00)
+## Timing (target 13:05, allowed 10:00–15:00)
 | Section | Planned | Actual |
 |---|---|---|
 | A. Intro, problem, objective | 2:30 | |
 | B. Simulated Annealing | 2:45 | |
-| C. Graph, data, methodology | 2:30 | |
+| C. Graph, data, methodology | 2:50 | |
 | D. Live run and results | 3:45 | |
 | E. Conclusion, references | 1:15 | |
-| **Total** | **12:45** | |
+| **Total** | **13:05** | |
 
 ## Submission bundle
 - [ ] Video file (MP4), 10–15 min.
@@ -45,4 +45,4 @@
 - [ ] References in the slides **and** in `REFERENCES.md`.
 
 ---
-_Generated 2026-10-17 18:56 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._
+_Generated 2026-10-17 19:10 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._

@@ -131,6 +131,7 @@ def make_figures(ds: Dataset, D, ctx: dict) -> dict:
     res, bf, greedy = ctx["res"], ctx["bf"], ctx["greedy"]
     started = time.perf_counter()
     files = {
+        "locations_map": maps.make_locations_map(ds, OUT / "fig0_locations_map.png"),
         "graph": viz.plot_graph(ctx["G"], ds, OUT / "fig1_graph.png"),
         "route_graph": viz.plot_route_graph(ctx["G"], ds, res.route, res.best_cost,
                                             OUT / "fig1b_route_on_graph.png"),

@@ -165,6 +165,34 @@ def make_static_map(ds: Dataset, route: list[int], D: list[list[float]], total: 
                     path: Path, use_tiles: bool = config.USE_BASEMAP_TILES,
                     fetch=fetch_tile) -> tuple[Path, bool]:
     """Route map as a PNG. Returns (path, True if OpenStreetMap tiles were used)."""
+    fig, ax, px, used_tiles = _map_axes(ds, use_tiles, fetch)
+    _draw_route(ax, ds, route, D, px)
+    ax.set_title(f"Blood-delivery route, Cagayan de Oro: {fmt_km(total)} km "
+                 f"(D = depot, 1..{ds.n - 1} = visiting order)")
+    return save(fig, path, ds), used_tiles
+
+
+def make_locations_map(ds: Dataset, path: Path, use_tiles: bool = config.USE_BASEMAP_TILES,
+                       fetch=fetch_tile) -> Path:
+    """The vertices only (no route), for introducing the locations before solving."""
+    fig, ax, px, _ = _map_axes(ds, use_tiles, fetch)
+    obstacles = list(px.values())
+    for loc in ds.locations:
+        depot = loc.id == config.DEPOT
+        x, y = px[loc.id]
+        z = 7 if depot else 5  # depot on top: NMMC is next door in the same compound
+        ax.scatter([x], [y], s=480, marker="s" if depot else "o", color=ORANGE if depot else BLUE,
+                   edgecolor=SURFACE, lw=2.5, zorder=z)
+        ax.text(x, y, str(loc.id), color="white", ha="center", va="center",
+                fontsize=13, weight="bold", zorder=z + 1)
+        obstacles.append(_name_label(ax, f"{ds.labels[loc.id]} {ds.display_name(loc.id)}",
+                                     x, y, obstacles))
+    ax.set_title(f"The {ds.n} locations in Cagayan de Oro City (square = depot V0)")
+    return save(fig, path, ds)
+
+
+def _map_axes(ds: Dataset, use_tiles: bool, fetch):
+    """Figure framed around every location, on OpenStreetMap tiles when available."""
     zoom = choose_zoom(ds)
     px = {l.id: to_pixels(l.latitude, l.longitude, zoom) for l in ds.locations}
     pad = 120
@@ -179,7 +207,6 @@ def make_static_map(ds: Dataset, route: list[int], D: list[list[float]], total: 
             used_tiles = True
         except Exception as exc:  # offline, blocked, or rate-limited -> plain background
             print(f"  (basemap tiles unavailable: {type(exc).__name__}; drawing plain map)")
-    _draw_route(ax, ds, route, D, px)
     ax.set_xlim(x0, x1)
     ax.set_ylim(y1, y0)  # pixel y grows downwards
     ax.set_aspect("equal")
@@ -187,9 +214,7 @@ def make_static_map(ds: Dataset, route: list[int], D: list[list[float]], total: 
     credit = config.MAP_ATTRIBUTION if used_tiles else "Plain background (map tiles unavailable)"
     ax.text(0.005, 0.005, credit, transform=ax.transAxes, fontsize=10, color=INK2,
             bbox=dict(fc=SURFACE, ec="none", alpha=0.8))
-    ax.set_title(f"Blood-delivery route, Cagayan de Oro: {fmt_km(total)} km "
-                 f"(D = depot, 1..{ds.n - 1} = visiting order)")
-    return save(fig, path, ds), used_tiles
+    return fig, ax, px, used_tiles
 
 
 def _draw_route(ax, ds: Dataset, route: list[int], D: list[list[float]], px: dict) -> None:
@@ -208,10 +233,11 @@ def _draw_route(ax, ds: Dataset, route: list[int], D: list[list[float]], px: dic
     for order, v in enumerate(route[:-1]):
         depot = v == config.DEPOT
         x, y = px[v]
+        z = 9 if depot else 5  # depot on top: NMMC is next door in the same compound
         ax.scatter([x], [y], s=650, marker="s" if depot else "o", color=ORANGE if depot else BLUE,
-                   edgecolor=SURFACE, lw=2.5, zorder=5)
+                   edgecolor=SURFACE, lw=2.5, zorder=z)
         ax.text(x, y, "D" if depot else str(order), color="white", ha="center", va="center",
-                fontsize=14, weight="bold", zorder=6)
+                fontsize=14, weight="bold", zorder=z + 1)
         spot = _name_label(ax, f"{ds.labels[v]} {ds.display_name(v)}", x, y, obstacles)
         obstacles.append(spot)
 

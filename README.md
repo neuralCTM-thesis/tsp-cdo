@@ -107,6 +107,7 @@ Algorithm 2.5 hides one detail that Appendix 4.5 shows: an **inner loop** of `it
 
 | File | Content |
 |---|---|
+| `fig0_locations_map.png` | the 9 locations on an OpenStreetMap base map, no route (slide A3) |
 | `fig1_graph.png`, `fig1b_route_on_graph.png` | labelled directed graph; the route on it with km per leg |
 | `fig2_weight_matrix.png` | weight matrix in km, assumed cells hatched |
 | `route_map.html`, `fig3_route_map.png` | route on a real map, numbered stops, arrows, Google Maps links |

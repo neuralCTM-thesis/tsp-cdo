@@ -16,9 +16,9 @@ Tick each box after checking it in the **final** recording.
 | Evidence expected | Artifact |
 |---|---|
 | Relevant TSP application | A2: Red Cross blood-delivery courier in Cagayan de Oro City (illustrative scenario) |
-| Clear locations, place in CDO | A3 + `data/locations.csv` (name, address/barangay, coordinates, Google Maps link) + `fig3_route_map.png` / `route_map.html` |
+| Clear locations, place in CDO | A3 + `fig0_locations_map.png` (locations on an OpenStreetMap base map) + `data/locations.csv` (name, address/barangay, coordinates, source, Google Maps link) |
 | Starting point | V0 = Red Cross chapter office (`role = depot`) |
-| Assumptions and constraints | A4 (single vehicle, no capacity limit, no service time, Google Maps distances with date and time; start/end at depot, each hospital once, roads only) |
+| Assumptions and constraints | A4 (single vehicle, no capacity limit, no service time, OpenStreetMap/OSRM driving distances with date and time; start/end at depot, each hospital once, roads only) |
 | Measurable objective | A4: minimise total driving distance in km (formula shown) |
 
 ## 3. Graph model and data (15 pts)
@@ -29,15 +29,15 @@ Tick each box after checking it in the **final** recording.
 | Weights and units | km everywhere; `data/distance_matrix.csv`; colour bar labelled "km" |
 | Labelled graph | `outputs/fig1_graph.png`, `outputs/fig1b_route_on_graph.png` |
 | Matching data table or matrix | `outputs/fig2_weight_matrix.png` + `docs/results_tables.md` §2. Same fingerprint as the graph |
-| Data sources; actual vs assumed | `data/data_sources.csv` (ACTUAL/ASSUMED, date, time, route), hatched cells in fig2, REFERENCES (Google Maps access dates) |
+| Data sources; actual vs assumed | `data/data_sources.csv` (ACTUAL/ASSUMED, date, time, route), hatched cells in fig2, C2 quality checks (`outputs/data_quality.csv`), REFERENCES [14]–[16] (OpenStreetMap/OSRM/Nominatim, query date) |
 
 ## 4. Methodology and Python implementation (25 pts)
 | Evidence expected | Artifact |
 |---|---|
 | Algorithm correctly applied and implemented | `src/simulated_annealing.py`; `tests/` (57 pytest tests, incl. SA = brute force on small instances, the Metropolis rule, geometric cooling) |
-| Actual code execution on the application data | live `python main.py --trace` in the video (narration script D, 7:45–11:30); `demo.ipynb` as an alternative |
-| Inputs explained | console sections "INPUT 1/2"; narration 7:45 |
-| Main code components explained | C3 pipeline; narration 11:15 (main loop); README "Project structure" |
+| Actual code execution on the application data | live `python main.py --trace` in the video (narration script D, 8:05–11:50); `demo.ipynb` as an alternative |
+| Inputs explained | console sections "INPUT 1/2"; narration 8:05 |
+| Main code components explained | C3 pipeline; **C4** module table + core loop excerpt; narration 11:35 (main loop live); README "Project structure" |
 | Output explained | console result, verification and statistics blocks; D2–D4 |
 
 ## 5. Solution and conclusion (20 pts)
@@ -54,7 +54,7 @@ Tick each box after checking it in the **final** recording.
 |---|---|
 | Clear narration, logical organisation | `docs/narration_script.md` (timestamps, A→E as in the PIT guide) |
 | Readable visuals and code | 15 pt+ figure fonts, high-contrast palette, console under 100 columns; `docs/demo_checklist.md` (font ≥ 18 pt) |
-| 10–15 minutes | planned 12:45; timing table in `demo_checklist.md` |
+| 10–15 minutes | planned 13:05; timing table in `demo_checklist.md` |
 
 ## 7. Submission and references (5 pts)
 | Evidence expected | Artifact |
