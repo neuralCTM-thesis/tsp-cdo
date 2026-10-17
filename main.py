@@ -214,7 +214,7 @@ def measurement_info(ds: Dataset) -> dict:
     dates = sorted({s.measured_date for s in actual if s.measured_date})
     times = sorted({s.measured_time for s in actual if s.measured_time})
     notes = [loc.notes for loc in ds.locations]
-    from_osm = sum("Nominatim" in note for note in notes)
+    from_osm = sum("OpenStreetMap" in note for note in notes)
     return {"dates": dates, "first_time": times[0] if times else "",
             "last_time": times[-1] if times else "", "source_label": ds.source_label,
             "sources": sorted({s.source for s in ds.sources.values() if s.source}),

@@ -37,8 +37,6 @@
 
 [16] Nominatim, "OpenStreetMap geocoder." [Online]. Available: https://nominatim.org (coordinates of the places marked in `data/locations.csv`).
 
-[17] Google LLC, "Google Maps," Cagayan de Oro City. [Online]. Available: https://www.google.com/maps (place coordinates).
-
 Base-map tiles of `route_map.html` and `fig3_route_map.png`: © OpenStreetMap contributors. One row per distance (source, date, time) is in `data/data_sources.csv`.
 
 ## How our code relates to [1] Appendix 4.5
@@ -52,4 +50,4 @@ Our `src/simulated_annealing.py` follows the structure of the paper's SA code: a
 7. An optional **segment-reversal ("2-opt") neighbour** (our extension, off by default).
 
 ---
-_Generated 2026-10-17 18:25 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/REFERENCES.md.tmpl` instead._
+_Generated 2026-10-17 18:49 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/REFERENCES.md.tmpl` instead._

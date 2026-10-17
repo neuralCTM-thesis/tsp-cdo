@@ -9,7 +9,7 @@
 - [ ] `python main.py --find-demo-seed`, then put the suggested seed into `DEFAULT_SEED` in `src/config.py`. The demo seed reaches the optimum, and its first 5 moves show an improvement, an accepted worse move and a rejection. Current seed: **1**.
 - [ ] `python main.py` once more, then `python main.py --check-consistency` → everything PASS.
 - [ ] Slides rebuilt from `docs/slides_outline.md` (numbers copied from `docs/results_tables.md`, not retyped).
-- [ ] Your names, course and section on the title slide.
+- [ ] Names, course and section on the title slide (in the deck already; add the instructor and date if required).
 
 ## Screen and recording setup
 - [ ] Resolution 1920×1080; record the full screen or one window.
@@ -45,4 +45,4 @@
 - [ ] References in the slides **and** in `REFERENCES.md`.
 
 ---
-_Generated 2026-10-17 18:25 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._
+_Generated 2026-10-17 18:49 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/demo_checklist.md.tmpl` instead._

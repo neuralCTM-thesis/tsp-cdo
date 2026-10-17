@@ -19,7 +19,8 @@ Figures are in `outputs/`. Every figure, table and number below comes from the s
 
 ### A1 · Title (0:00–0:15)
 - **Simulated Annealing for the Traveling Salesperson Problem: Routing Blood Deliveries in Cagayan de Oro City**
-- [Your names] · [Course / section] · [Instructor] · [Date]
+- Hans Matthew Del Mundo · Vin Marcus Gerebise · Gerald Helbiro Jr. · Ira Chloie Narisma
+- Computer Science CS4A · CS414 Graph Theory · [Instructor] · [Date]
 - Assigned algorithm: Simulated Annealing (Luna-Garcia, Candano & Caga-anan, TMJM 6(2), 2024, §2.5)
 
 ### A2 · The real-life problem (0:15–1:00)
@@ -39,7 +40,7 @@ Figures are in `outputs/`. Every figure, table and number below comes from the s
   - **V6** Madonna and Child Hospital
   - **V7** Northern Mindanao Medical Center
   - **V8** J.R. Borja General Hospital
-- Area: Cagayan de Oro City proper. Coordinates: OpenStreetMap Nominatim for 8 places and Google Maps pins for 1 (noted per row in `data/locations.csv`) (`data/locations.csv`).
+- Area: Cagayan de Oro City proper. Coordinates: OpenStreetMap (Nominatim geocoder and Overpass API) (`data/locations.csv`).
 
 ### A4 · Objective, assumptions and constraints (1:45–2:30)
 - **Objective:** minimise the total **driving distance (km)**:
@@ -143,7 +144,7 @@ Initial random tour cost (Alg 2.5 step 2):
 **Advantages**
 - Escapes local optima by sometimes accepting worse tours (unlike greedy or pure hill-climbing).
 - Simple: the whole method is one short function (`simulated_annealing()`), with no gradients and no problem-specific rules.
-- Fast in practice: about 238 ms per run on our data (30-run mean).
+- Fast in practice: about 88 ms per run on our data (30-run mean).
 - Works directly on a distance matrix, including **asymmetric** (one-way) distances.
 
 **Limitations**
@@ -172,7 +173,7 @@ Initial random tour cost (Alg 2.5 step 2):
 
 ### C2 · Weight matrix and data sources (6:05–6:55)
 - Visual: `fig2_weight_matrix.png` (row = FROM, column = TO).
-- **Sources:** the length of the route chosen by the OSRM car router on the OpenStreetMap road network, one request per direction, obtained on 2026-10-17 (18:15–18:18, Philippine time). Coordinates: OpenStreetMap Nominatim for 8 places and Google Maps pins for 1 (noted per row in `data/locations.csv`).
+- **Sources:** the length of the route chosen by the OSRM car router on the OpenStreetMap road network, one request per direction, obtained on 2026-10-17 (18:15–18:18, Philippine time). Coordinates: OpenStreetMap (Nominatim geocoder and Overpass API).
 - **Actual vs assumed:** 72 ACTUAL (`data/data_sources.csv`). Assumed cells are hatched and marked * in the matrix.
 - The validator checks: square matrix, zero diagonal, positive distances, ids match `locations.csv`, matrix = `data_sources.csv`.
 
@@ -224,12 +225,12 @@ Initial random tour cost (Alg 2.5 step 2):
 
 | Algorithm | Best | Worst | Average | Variance | Std Dev | Avg time | Hit optimum |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.2379 s | 100% |
-| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0813 s | 100% |
-| Greedy | 15.37 | 15.37 | 15.370 | 0 | 0 | 0.0002 s | 0% |
+| SA (ours) | 14.1 | 14.1 | 14.100 | 0.000 | 0.000 | 0.0885 s | 100% |
+| Brute force | 14.1 | 14.1 | 14.100 | 0 | 0 | 0.0220 s | 100% |
+| Greedy | 15.37 | 15.37 | 15.370 | 0 | 0 | 0.0000 s | 0% |
 
 - Visuals: `fig7_runs_vs_optimum.png`, `fig8_search_space.png` (all 40,320 tours).
-- Honest note: at n = 9, brute force takes 0.08 s and one SA run about 238 ms, so exhaustive search is still cheap at this size. SA earns its place as n grows: with 20 stops brute force would need 19! ≈ 1.2 × 10¹⁷ tours, while SA's work grows only with the number of moves × n.
+- Honest note: at n = 9, brute force takes 0.02 s and one SA run about 88 ms, so exhaustive search is still cheap at this size. SA earns its place as n grows: with 20 stops brute force would need 19! ≈ 1.2 × 10¹⁷ tours, while SA's work grows only with the number of moves × n.
 
 ### D4 · How SA got there (11:00–11:30)
 - `fig4_convergence.png`: the current tour jumps around at high T, then settles; the best tour reaches 14.1 km at move 10,506. The current tour can end above the best one, which is why line 13 returns the best-so-far tour.
@@ -260,4 +261,4 @@ Initial random tour cost (Alg 2.5 step 2):
 See `REFERENCES.md` (the paper, Metropolis 1953, Kirkpatrick 1983, Černý 1985, Hajek 1988, NetworkX, Matplotlib, Folium, and the data sources with access dates).
 
 ---
-_Generated 2026-10-17 18:25 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/slides_outline.md.tmpl` instead._
+_Generated 2026-10-17 18:49 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/slides_outline.md.tmpl` instead._

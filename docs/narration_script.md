@@ -22,7 +22,7 @@ Our scenario is illustrative but realistic. A courier of the Philippine Red Cros
 
 **1:00 [SHOW] Slide A3, the locations**
 
-These are our 9 locations. V0 is the starting point, Philippine Red Cross Misamis Oriental-Cagayan de Oro Chapter. V1 to V8 are the hospitals. The coordinates come from OpenStreetMap Nominatim for 8 places and Google Maps pins for 1 (noted per row in `data/locations.csv`), and each place is recorded in our data file with its address and a Google Maps link.
+These are our 9 locations. V0 is the starting point, Philippine Red Cross Misamis Oriental-Cagayan de Oro Chapter. V1 to V8 are the hospitals. The coordinates come from OpenStreetMap (Nominatim geocoder and Overpass API), and each place is recorded in our data file with its address and a Google Maps link.
 
 **1:45 [SHOW] Slide A4, objective, assumptions, constraints**
 
@@ -50,7 +50,7 @@ Here is the rule on our real data, taken from the trace of our run. [Read the fi
 
 **4:35 [SHOW] Slide B5, advantages and limitations**
 
-The advantages: it escapes local optima, it is simple, it is fast, about 238 milliseconds per run here, and it works directly with one-way distances. The limitations: it depends on its parameters, its answer can change from run to run, and in practice it does not guarantee the optimum. Convergence is only proven for logarithmically slow cooling, which nobody can wait for.
+The advantages: it escapes local optima, it is simple, it is fast, about 88 milliseconds per run here, and it works directly with one-way distances. The limitations: it depends on its parameters, its answer can change from run to run, and in practice it does not guarantee the optimum. Convergence is only proven for logarithmically slow cooling, which nobody can wait for.
 
 **4:55 [SHOW] Slide B6, optimality and complexity**
 
@@ -125,4 +125,4 @@ Our references are on screen: the assigned paper, whose Appendix code is the bas
 **12:45 End.**
 
 ---
-_Generated 2026-10-17 18:25 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/narration_script.md.tmpl` instead._
+_Generated 2026-10-17 18:49 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/narration_script.md.tmpl` instead._

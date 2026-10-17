@@ -101,9 +101,9 @@ def source_context(s: dict) -> dict:
     else:
         method, dependency = f"synthetic placeholder values ({when})", "the data are synthetic"
     n_osm, n_all = m["coords_from_osm"], m["coords_total"]
-    coords = ("OpenStreetMap (Nominatim geocoder)" if n_osm == n_all else
+    coords = ("OpenStreetMap (Nominatim geocoder and Overpass API)" if n_osm == n_all else
               "Google Maps place pins" if n_osm == 0 else
-              f"OpenStreetMap Nominatim for {n_osm} places and Google Maps pins for "
+              f"OpenStreetMap for {n_osm} places and Google Maps pins for "
               f"{n_all - n_osm} (noted per row in `data/locations.csv`)")
     res = matrix_resolution(s["matrix"])
     refs = []
