@@ -2,14 +2,11 @@
 report.py - everything printed to the console and every table written to outputs/.
 
 Console text is kept under ~100 characters wide so it stays readable in a
-screen recording. Every exported file carries the data fingerprint.
+screen recording.
 """
 from __future__ import annotations
 
 import csv
-import json
-import math
-from datetime import datetime
 from pathlib import Path
 
 from src import config
@@ -48,14 +45,6 @@ def section(title: str) -> None:
     print("=" * 78)
 
 
-def placeholder_banner() -> str:
-    bar = "!" * 78
-    return (f"\n{bar}\n!!  PLACEHOLDER DATA IN USE - these are NOT real road distances.{'':12}!!\n"
-            f"!!  Fill in data/*.csv (see docs/data_collection_guide.md) before you record.  !!\n"
-            f"!!  Every figure is watermarked 'PLACEHOLDER DATA' while this is the case.  {'':1}!!\n"
-            f"{bar}\n")
-
-
 def pretty_route(route: list[int], ds: Dataset) -> str:
     return route_labels(route, ds).replace(" -> ", ARROW)
 
@@ -66,7 +55,6 @@ def pretty_route(route: list[int], ds: Dataset) -> str:
 def print_validation(rep: ValidationReport, ds: Dataset) -> None:
     section("DATA VALIDATION")
     print(f"Data folder      : {ds.data_dir}")
-    print(f"Data fingerprint : {ds.fingerprint}   (stamped on every output file)")
     print(f"Vertices         : {ds.n}  (1 depot + {ds.n - 1} hospitals)")
     print(f"Directed arcs    : {ds.n * (ds.n - 1)}  (n(n-1), complete digraph)")
     counts = ", ".join(f"{k}={v}" for k, v in sorted(rep.status_counts.items())) or "-"
@@ -97,8 +85,7 @@ def print_inputs(ds: Dataset, D: list[list[float]]) -> None:
             cells.append("-" if i == j else fmt_km(D[i][j]) + mark)
         body.append([ds.labels[i]] + cells)
     print(format_table(header, body, "l" + "r" * ds.n))
-    print(f"  * = ASSUMED value (not measured); all others ACTUAL ({ds.source_label})"
-          if not ds.is_placeholder else "  (all values are PLACEHOLDER)")
+    print(f"  * = ASSUMED value (not measured); all others ACTUAL ({ds.source_label})")
 
 
 def print_params(params: config.SAParams, neighbor: str, seed: int, mean_uphill: float | None,
@@ -240,14 +227,12 @@ def print_run_statistics(summary: dict, optimum: float, greedy_cost: float, bf_t
 # ---------------------------------------------------------------------------
 # CSV / JSON exports
 # ---------------------------------------------------------------------------
-def write_csv(path: Path, headers: list[str], rows: list[list], fingerprint: str) -> Path:
-    """Write a CSV whose last line records the data fingerprint."""
+def write_csv(path: Path, headers: list[str], rows: list[list]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.writer(fh)
         writer.writerow(headers)
         writer.writerows(rows)
-        writer.writerow([f"# data fingerprint {fingerprint}"])
     return path
 
 
@@ -259,17 +244,17 @@ def export_trace(trace, ds: Dataset, out: Path) -> Path:
              "ACCEPT" if s.accepted else "REJECT"] for s in trace]
     return write_csv(out / "trace.csv",
                      ["move", "level", "T_km", "current_tour", "current_km", "positions",
-                      "new_tour", "new_km", "delta_km", "P", "r", "decision"], rows, ds.fingerprint)
+                      "new_tour", "new_km", "delta_km", "P", "r", "decision"], rows)
 
 
-def export_history(hist, out: Path, fingerprint: str) -> Path:
+def export_history(hist, out: Path) -> Path:
     rows = zip(hist.iteration, hist.level, hist.temperature, hist.current_cost, hist.best_cost,
                hist.delta, hist.probability, hist.accepted)
     return write_csv(out / "sa_history.csv",
                      ["move", "level", "T_km", "current_km", "best_km", "delta_km", "P",
                       "accepted"],
                      [[a, b, f"{c:.6f}", f"{d:.4f}", f"{e:.4f}", f"{f:.4f}", f"{g:.6f}", int(h)]
-                      for a, b, c, d, e, f, g, h in rows], fingerprint)
+                      for a, b, c, d, e, f, g, h in rows])
 
 
 def export_verification(vr, ds: Dataset, out: Path) -> Path:
@@ -280,7 +265,7 @@ def export_verification(vr, ds: Dataset, out: Path) -> Path:
     rows.append(["", "", "", "", "TOTAL (reported by SA)", fmt_km(vr.reported_km), "", ""])
     return write_csv(out / "verification_table.csv",
                      ["step", "from", "from_name", "to", "to_name", "km", "running_km",
-                      "data_status"], rows, ds.fingerprint)
+                      "data_status"], rows)
 
 
 def export_runs(records, out: Path, ds: Dataset, name: str = "sa_runs.csv") -> Path:
@@ -289,17 +274,17 @@ def export_runs(records, out: Path, ds: Dataset, name: str = "sa_runs.csv") -> P
              pretty_route(r.tour + [0], ds)] for r in records]
     return write_csv(out / name, ["seed", "best_km", "gap_pct", "hit_optimum", "runtime_s",
                                   "moves", "levels", "best_found_at_move", "stop_reason",
-                                  "route"], rows, ds.fingerprint)
+                                  "route"], rows)
 
 
-def export_table2(summary: dict, optimum: float, greedy, bf, out: Path, fp: str) -> Path:
+def export_table2(summary: dict, optimum: float, greedy, bf, out: Path) -> Path:
     rows = [table2_rows("SA (ours)", summary),
             ["Brute force", fmt_km(optimum), fmt_km(optimum), f"{optimum:.3f}", "0.000", "0.000",
              f"{bf.runtime_s:.4f} s", "100%"],
             ["Greedy", fmt_km(greedy.cost), fmt_km(greedy.cost), f"{greedy.cost:.3f}", "0.000",
              "0.000", f"{greedy.runtime_s:.4f} s",
              "100%" if abs(greedy.cost - optimum) <= config.FLOAT_TOL else "0%"]]
-    return write_csv(out / "table2_style_results.csv", TABLE2_HEADERS, rows, fp)
+    return write_csv(out / "table2_style_results.csv", TABLE2_HEADERS, rows)
 
 
 def export_vertices(ds: Dataset, out: Path) -> Path:
@@ -307,7 +292,7 @@ def export_vertices(ds: Dataset, out: Path) -> Path:
              l.google_maps_url] for l in ds.locations]
     return write_csv(out / "table_vertices.csv", ["vertex", "name", "short_name", "role",
                                                   "address", "latitude", "longitude",
-                                                  "google_maps_url"], rows, ds.fingerprint)
+                                                  "google_maps_url"], rows)
 
 
 def export_data_quality(rep: ValidationReport, ds: Dataset, out: Path) -> Path:
@@ -319,22 +304,4 @@ def export_data_quality(rep: ValidationReport, ds: Dataset, out: Path) -> Path:
               fmt_km(via), f"{dik - via:+.2f}"] for i, j, k, dik, via in rep.triangle_violations]
     return write_csv(out / "data_quality.csv",
                      ["type", "edge", "km (i->j or direct)", "km (j->i or via)", "difference"],
-                     rows, ds.fingerprint)
-
-
-def write_json(path: Path, payload: dict) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, default=_json_default), encoding="utf-8")
-    return path
-
-
-def _json_default(obj):
-    if isinstance(obj, float) and math.isnan(obj):
-        return None
-    if hasattr(obj, "__dict__"):
-        return obj.__dict__
-    return str(obj)
-
-
-def timestamp() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M")
+                     rows)

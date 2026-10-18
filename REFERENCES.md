@@ -49,5 +49,3 @@ Our `src/simulated_annealing.py` follows the structure of the paper's SA code: a
 6. **Verification**: an independent edge-by-edge recount, brute force (Alg 2.3) and greedy (Alg 2.7) on the same matrix, and 30 seeded runs.
 7. An optional **segment-reversal ("2-opt") neighbour** (our extension, off by default).
 
----
-_Generated 2026-10-17 19:10 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/REFERENCES.md.tmpl` instead._

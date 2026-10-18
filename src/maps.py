@@ -3,6 +3,8 @@ maps.py - the route on a real map.
 
 * make_folium_map   interactive HTML (OpenStreetMap), numbered stops, direction arrows,
                     a Google Maps directions link for every leg and for the whole route
+* make_dataset_map  interactive HTML of the whole dataset: every location and every
+                    pair labelled with both directed distances (no route)
 * make_static_map   PNG for the slides. Uses OpenStreetMap tiles when the internet is
                     available; otherwise draws the same picture on a plain background.
 
@@ -65,16 +67,14 @@ def _marker_html(text: str, depot: bool) -> str:
 def _legend_html(ds: Dataset, route: list[int], total: float, url: str) -> str:
     stops = "".join(f"<li>{html.escape(ds.labels[v])} {html.escape(ds.display_name(v))}</li>"
                     for v in route[1:-1])
-    warn = ('<div style="color:#d03b3b;font-weight:bold;font-size:16px">PLACEHOLDER DATA - '
-            'not real distances</div>') if ds.is_placeholder else ""
     return (f'<div style="position:fixed;top:12px;right:12px;z-index:9999;background:white;'
             f'padding:10px 14px;border-radius:6px;box-shadow:0 0 6px #0004;'
-            f'font:14px sans-serif;max-width:300px">{warn}'
+            f'font:14px sans-serif;max-width:300px">'
             f'<b style="font-size:16px">Blood-delivery route: {fmt_km(total)} km</b><br>'
             f'Start/end: {html.escape(ds.display_name(route[0]))} (D)<ol>{stops}</ol>'
             f'<a href="{url}" target="_blank">Open the whole route in Google Maps</a><br>'
             f'<span style="color:{MUTED};font-size:11px">Lines show visiting order, not road '
-            f'geometry. Data fingerprint {ds.fingerprint}</span></div>')
+            f'geometry.</span></div>')
 
 
 def make_folium_map(ds: Dataset, route: list[int], D: list[list[float]], total: float,
@@ -110,6 +110,73 @@ def make_folium_map(ds: Dataset, route: list[int], D: list[list[float]], total: 
     m.fit_bounds([[min(lats), min(lons)], [max(lats), max(lons)]], padding=(40, 40))
     path.parent.mkdir(parents=True, exist_ok=True)
     m.save(str(path))
+    return path
+
+
+# ---------------------------------------------------------------------------
+# Interactive HTML map of the whole dataset (vertices + all 72 directed distances)
+# ---------------------------------------------------------------------------
+def _distance_table_html(ds: Dataset, D: list[list[float]], v: int) -> str:
+    """Row v (FROM v) and column v (TO v) of the matrix, with the data status of each arc."""
+    rows = "".join(
+        f"<tr><td>{html.escape(ds.labels[u])} {html.escape(ds.display_name(u))}</td>"
+        f"<td align=right>{fmt_km(D[v][u])}</td><td align=right>{fmt_km(D[u][v])}</td>"
+        f"<td>{'ASSUMED' if 'ASSUMED' in (ds.edge_status(v, u), ds.edge_status(u, v)) else 'ACTUAL'}"
+        f"</td></tr>" for u in range(ds.n) if u != v)
+    return (f'<table style="font-size:12px;border-collapse:collapse">'
+            f'<tr><th align=left>other vertex</th><th>from {ds.labels[v]} (km)</th>'
+            f'<th>to {ds.labels[v]} (km)</th><th>data</th></tr>{rows}</table>')
+
+
+def build_dataset_map(ds: Dataset, D: list[list[float]]) -> folium.Map:
+    """Every location of data/locations.csv on OpenStreetMap, and every pair of locations
+    joined by a line labelled with both directed distances (D[i][j] and D[j][i])."""
+    lats = [l.latitude for l in ds.locations]
+    lons = [l.longitude for l in ds.locations]
+    m = folium.Map(location=[sum(lats) / len(lats), sum(lons) / len(lons)], zoom_start=14,
+                   tiles="OpenStreetMap", control_scale=True)
+    arcs = folium.FeatureGroup(name=f"All {ds.n * (ds.n - 1) // 2} pairs "
+                                    f"({ds.n * (ds.n - 1)} directed arcs)")
+    for i in range(ds.n):
+        for j in range(i + 1, ds.n):
+            a, b = ds.locations[i], ds.locations[j]
+            text = (f"{ds.labels[i]} → {ds.labels[j]} = {fmt_km(D[i][j])} km  |  "
+                    f"{ds.labels[j]} → {ds.labels[i]} = {fmt_km(D[j][i])} km")
+            folium.PolyLine([(a.latitude, a.longitude), (b.latitude, b.longitude)],
+                            color=MUTED, weight=2, opacity=0.55, tooltip=text).add_to(arcs)
+    arcs.add_to(m)
+    stops = folium.FeatureGroup(name="Locations (V0 = depot)")
+    for v, loc in enumerate(ds.locations):
+        depot = v == config.DEPOT
+        info = (f"<b>{html.escape(loc.label)} {html.escape(loc.name)}</b> ({loc.role})<br>"
+                f"{html.escape(loc.address)}<br>{loc.latitude:.6f}, {loc.longitude:.6f}")
+        if loc.google_maps_url:
+            info += f' · <a href="{html.escape(loc.google_maps_url)}" target="_blank">Google Maps</a>'
+        info += f"<br><br>{_distance_table_html(ds, D, v)}"
+        folium.Marker([loc.latitude, loc.longitude],
+                      icon=folium.DivIcon(html=_marker_html("D" if depot else str(v), depot),
+                                          icon_size=(30, 30), icon_anchor=(15, 15)),
+                      tooltip=f"{loc.label} {ds.display_name(v)}",
+                      popup=folium.Popup(info, max_width=420)).add_to(stops)
+    stops.add_to(m)
+    folium.LayerControl(collapsed=False).add_to(m)
+    legend = "".join(f"<li>{html.escape(ds.labels[v])} {html.escape(ds.display_name(v))}</li>"
+                     for v in range(ds.n))
+    m.get_root().html.add_child(folium.Element(
+        f'<div style="position:fixed;bottom:24px;left:12px;z-index:9999;background:white;'
+        f'padding:10px 14px;border-radius:6px;box-shadow:0 0 6px #0004;font:13px sans-serif;'
+        f'max-width:280px"><b style="font-size:15px">Dataset: {ds.n} locations, '
+        f'{ds.n * (ds.n - 1)} directed distances</b><ul style="margin:6px 0;padding-left:18px">'
+        f'{legend}</ul><span style="color:{MUTED};font-size:11px">Distances: {ds.source_label}. '
+        f'Hover a line for both directions; click a marker for its full matrix row and column. '
+        f'Lines are straight, not road geometry.</span></div>'))
+    m.fit_bounds([[min(lats), min(lons)], [max(lats), max(lons)]], padding=(40, 40))
+    return m
+
+
+def make_dataset_map(ds: Dataset, D: list[list[float]], path: Path) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    build_dataset_map(ds, D).save(str(path))
     return path
 
 

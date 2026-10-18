@@ -28,7 +28,7 @@ Tick each box after checking it in the **final** recording.
 | Edges and direction | C1: complete **directed** graph, n(n−1) arcs; asymmetric pairs counted (`outputs/data_quality.csv`) |
 | Weights and units | km everywhere; `data/distance_matrix.csv`; colour bar labelled "km" |
 | Labelled graph | `outputs/fig1_graph.png`, `outputs/fig1b_route_on_graph.png` |
-| Matching data table or matrix | `outputs/fig2_weight_matrix.png` + `docs/results_tables.md` §2. Same fingerprint as the graph |
+| Matching data table or matrix | `outputs/fig2_weight_matrix.png` + the matrix table in `demo.ipynb` §3 |
 | Data sources; actual vs assumed | `data/data_sources.csv` (ACTUAL/ASSUMED, date, time, route), hatched cells in fig2, C2 quality checks (`outputs/data_quality.csv`), REFERENCES [14]–[16] (OpenStreetMap/OSRM/Nominatim, query date) |
 
 ## 4. Methodology and Python implementation (25 pts)
@@ -53,8 +53,8 @@ Tick each box after checking it in the **final** recording.
 | Evidence expected | Artifact |
 |---|---|
 | Clear narration, logical organisation | `docs/narration_script.md` (timestamps, A→E as in the PIT guide) |
-| Readable visuals and code | 15 pt+ figure fonts, high-contrast palette, console under 100 columns; `docs/demo_checklist.md` (font ≥ 18 pt) |
-| 10–15 minutes | planned 13:05; timing table in `demo_checklist.md` |
+| Readable visuals and code | 15 pt+ figure fonts, high-contrast palette, console under 100 columns |
+| 10–15 minutes | planned 13:05; timing in `docs/narration_script.md` |
 
 ## 7. Submission and references (5 pts)
 | Evidence expected | Artifact |
@@ -65,4 +65,4 @@ Tick each box after checking it in the **final** recording.
 | Algorithm, code and data credited | `REFERENCES.md` + slide E3; code header credits Appendix 4.5 and lists our modifications |
 
 ## Consistency (PIT: "graph, data, Python inputs, and reported results are consistent")
-`python main.py --check-consistency` recomputes everything from the CSVs and checks the data fingerprint on every figure, table, map and generated doc.
+`main.py` and `demo.ipynb` read the same `data/*.csv` and call the same functions, so the graph, matrix, inputs and results always agree.

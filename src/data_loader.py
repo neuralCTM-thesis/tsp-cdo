@@ -6,7 +6,7 @@ Files (row = FROM, column = TO; distances in km):
     distance_matrix.csv  full n x n DIRECTED matrix (A->B may differ from B->A)
     data_sources.csv     one row per directed edge: ACTUAL (read from a map / routing
                          service, with date/time) or ASSUMED (e.g. copied from the
-                         reverse direction) - PLACEHOLDER rows exist only in the demo data
+                         reverse direction)
 
 The validator never "fixes" data silently. It returns a list of errors (the
 program refuses to run) and warnings (the program runs but prints them).
@@ -14,7 +14,6 @@ program refuses to run) and warnings (the program runs but prints them).
 from __future__ import annotations
 
 import csv
-import hashlib
 import math
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -26,7 +25,7 @@ LOCATION_COLUMNS = ["id", "label", "name", "short_name", "role", "address",
 SOURCE_COLUMNS = ["from_label", "to_label", "from_short_name", "to_short_name",
                   "distance_km", "status", "source", "measured_date",
                   "measured_time", "route_summary", "assumed_basis", "notes"]
-VALID_STATUSES = ("ACTUAL", "ASSUMED", "PLACEHOLDER")
+VALID_STATUSES = ("ACTUAL", "ASSUMED")
 VALID_ROLES = ("depot", "stop")
 MATRIX_CORNER = "from\\to"
 
@@ -76,8 +75,6 @@ class Dataset:
     matrix: list[list[float | None]]
     matrix_labels: list[str]
     sources: dict[tuple[int, int], EdgeSource]
-    fingerprint: str
-    is_placeholder: bool
     load_errors: list[str] = field(default_factory=list)
 
     @property
@@ -89,15 +86,13 @@ class Dataset:
         return [loc.label for loc in self.locations]
 
     def edge_status(self, i: int, j: int) -> str:
-        """ACTUAL / ASSUMED / PLACEHOLDER (or MISSING) for the edge i -> j."""
+        """ACTUAL / ASSUMED (or MISSING) for the edge i -> j."""
         src = self.sources.get((i, j))
         return src.status if src else "MISSING"
 
     @property
     def source_label(self) -> str:
         """Short name of where the distances come from (figure footers, console)."""
-        if self.is_placeholder:
-            return "PLACEHOLDER DATA"
         text = " ".join(s.source for s in self.sources.values()).lower()
         if "osrm" in text or "openstreetmap" in text:
             return "OpenStreetMap/OSRM road distances"
@@ -149,17 +144,6 @@ def _to_float(text: str) -> float | None:
         return float(text)
     except ValueError:
         return math.nan
-
-
-def compute_fingerprint(data_dir: Path) -> str:
-    """Short SHA-256 of the three CSV files. Stamped on every output for consistency checks."""
-    digest = hashlib.sha256()
-    for name in (config.LOCATIONS_FILE, config.MATRIX_FILE, config.SOURCES_FILE):
-        path = data_dir / name
-        digest.update(name.encode())
-        if path.exists():
-            digest.update(path.read_bytes().replace(b"\r\n", b"\n"))
-    return digest.hexdigest()[:10]
 
 
 # ---------------------------------------------------------------------------
@@ -232,24 +216,8 @@ def load_dataset(data_dir: Path) -> Dataset:
     label_to_id = {loc.label: loc.id for loc in locations}
     sources, problems = load_sources(data_dir / config.SOURCES_FILE, label_to_id)
     load_errors.extend(problems)
-    is_placeholder = (
-        any(s.status == "PLACEHOLDER" for s in sources.values())
-        or any(loc.name.upper().startswith("PLACEHOLDER") for loc in locations)
-    )
     return Dataset(data_dir=data_dir, locations=locations, matrix=matrix,
-                   matrix_labels=col_labels, sources=sources,
-                   fingerprint=compute_fingerprint(data_dir),
-                   is_placeholder=is_placeholder, load_errors=load_errors)
-
-
-def is_unfilled_template(data_dir: Path) -> bool:
-    """True when the real-data templates exist but no distance has been entered yet."""
-    try:
-        _, _, matrix = load_matrix(data_dir / config.MATRIX_FILE)
-    except (FileNotFoundError, IndexError):
-        return True
-    off_diagonal = [v for i, row in enumerate(matrix) for j, v in enumerate(row) if i != j]
-    return all(v is None for v in off_diagonal)
+                   matrix_labels=col_labels, sources=sources, load_errors=load_errors)
 
 
 # ---------------------------------------------------------------------------
@@ -276,7 +244,7 @@ def _check_locations(ds: Dataset, rep: ValidationReport) -> None:
                   and CDO_LON_RANGE[0] <= loc.longitude <= CDO_LON_RANGE[1]):
             rep.warnings.append(f"{where}: ({loc.latitude}, {loc.longitude}) is outside the "
                                 f"Cagayan de Oro area - latitude/longitude swapped?")
-        if not loc.google_maps_url and not ds.is_placeholder:
+        if not loc.google_maps_url:
             rep.warnings.append(f"{where}: google_maps_url is empty.")
     depots = [loc.id for loc in ds.locations if loc.role == "depot"]
     if depots != [config.DEPOT]:
@@ -391,33 +359,12 @@ def distance_matrix(ds: Dataset) -> list[list[float]]:
 
 
 # ---------------------------------------------------------------------------
-# Helpers for data entry (used by main.py --prepare-sources / --build-matrix)
+# Helpers for writing the CSVs (used by main.py --fetch-osm)
 # ---------------------------------------------------------------------------
 def directed_pairs_in_entry_order(n: int) -> list[tuple[int, int]]:
     """V0->V1, V1->V0, V0->V2, V2->V0, ... : each pair and its reverse next to each other,
     matching how you measure them by hand (look up A->B, then press 'reverse')."""
     return [edge for i in range(n) for j in range(i + 1, n) for edge in ((i, j), (j, i))]
-
-
-def prepare_sources_template(data_dir: Path) -> Path:
-    """(Re)write data_sources.csv with one row per directed edge and the short names
-    from locations.csv. Values already typed in are kept."""
-    locations = load_locations(data_dir / config.LOCATIONS_FILE)
-    path = data_dir / config.SOURCES_FILE
-    existing = {}
-    if path.exists():
-        existing = {(r["from_label"], r["to_label"]): r for r in _read_csv_rows(path)}
-    with path.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=SOURCE_COLUMNS)
-        writer.writeheader()
-        for i, j in directed_pairs_in_entry_order(len(locations)):
-            a, b = locations[i], locations[j]
-            row = {c: "" for c in SOURCE_COLUMNS}
-            row.update(existing.get((a.label, b.label), {}))
-            row.update(from_label=a.label, to_label=b.label,
-                       from_short_name=a.short_name, to_short_name=b.short_name)
-            writer.writerow({c: row.get(c, "") for c in SOURCE_COLUMNS})
-    return path
 
 
 def build_matrix_from_sources(data_dir: Path) -> Path:

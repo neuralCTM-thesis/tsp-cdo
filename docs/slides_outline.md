@@ -11,7 +11,7 @@ Target length **12–13 min** (PIT allows 10–15). Section timing follows the P
 | D. Python execution and results (live) | D1–D4 | 8:05–11:50 |
 | E. Conclusion and references | E1–E3 | 11:50–13:05 |
 
-Figures are in `outputs/`. Every figure, table and number below comes from the same data (fingerprint `c652b67ace`).
+Figures are in `outputs/`. Every figure, table and number below comes from the same data (`data/*.csv`).
 
 ---
 
@@ -286,5 +286,3 @@ T *= params.alpha                                     # step 11
 ### E3 · References (12:45–13:05)
 See `REFERENCES.md` (the paper, Metropolis 1953, Kirkpatrick 1983, Černý 1985, Hajek 1988, NetworkX, Matplotlib, Folium, and the data sources with access dates).
 
----
-_Generated 2026-10-17 19:10 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/slides_outline.md.tmpl` instead._

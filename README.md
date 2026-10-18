@@ -6,7 +6,7 @@ A Philippine Red Cross Misamis Oriental courier (illustrative scenario) leaves t
 
 We then **prove** whether the result is optimal: brute force runs on the same matrix, the route is recounted edge by edge, and SA is run with 30 seeds.
 
-> **Data status.** `data/*.csv` hold real data: OpenStreetMap coordinates for all 9 places and 72 directed OSRM car-route distances, fetched with `python main.py --fetch-osm` on 2026-10-17. Three places (the Red Cross chapter, Maria Reyna-Xavier University Hospital and J.R. Borja) were found on OpenStreetMap under alternate names; `locations.csv` notes the source of each. If `data/*.csv` are emptied, the program falls back to a clearly labelled **PLACEHOLDER** dataset (`data/placeholder/`). See [`docs/data_collection_guide.md`](docs/data_collection_guide.md).
+> **Data status.** `data/*.csv` hold real data: OpenStreetMap coordinates for all 9 places and 72 directed OSRM car-route distances, fetched with `python main.py --fetch-osm` on 2026-10-17. Three places (the Red Cross chapter, Maria Reyna-Xavier University Hospital and J.R. Borja) were found on OpenStreetMap under alternate names; `locations.csv` notes the source of each.
 
 ---
 
@@ -24,32 +24,26 @@ python -m pytest                # 57 tests
 
 # 3. run it
 python main.py --trace          # full run + the first 5 SA moves in full
-python main.py --experiments    # parameter study (about 3 min); run once per dataset
-python main.py --check-consistency
+python main.py --experiments    # parameter study (about 3 min)
 ```
 
-Results land in `outputs/`. The presentation documents in `docs/` and `REFERENCES.md` are regenerated with the new numbers after every run.
+Results land in `outputs/`.
 
-Prefer a notebook? Open **`demo.ipynb`** (`jupyter notebook demo.ipynb`). It runs the same functions step by step, with large fonts for recording.
+**`demo.ipynb`** (`jupyter notebook demo.ipynb`) is the project write-up. It follows the rubric order (problem → algorithm → data and graph → SA steps → verification → optimality → conclusion → references) and writes the whole algorithm out in its own cells (data checks, SA, verification, brute force, greedy, 30 runs), reading only `data/*.csv`. It reproduces `main.py`'s trace and result exactly.
 
 ## Command reference
 
 | Command | What it does |
 |---|---|
-| `python main.py` | validate data → print inputs → SA → verification → brute force + greedy → 30 runs → figures → docs |
+| `python main.py` | validate data → print inputs → SA → verification → brute force + greedy → 30 runs → figures |
 | `--trace` | also print the first 5 SA moves (tour, swap, Δ, T, P = e^(−Δ/T), r, ACCEPT/REJECT) |
 | `--seed N` | seed of the presentation run (default in `src/config.py`) |
 | `--runs N` | number of independent runs for the statistics (default 30) |
 | `--neighbor swap\|2opt` | swap = the paper's move (default); 2opt = segment reversal, our extension |
-| `--placeholder` | force the placeholder dataset |
 | `--no-figures` | skip figures (faster) |
 | `--experiments` | α sensitivity, swap vs 2-opt, one run with the paper's defaults |
 | `--validate` | only check the CSV files |
-| `--prepare-sources` | write the 72 rows of `data/data_sources.csv` (after `locations.csv` is filled) |
-| `--build-matrix` | build `data/distance_matrix.csv` from `data/data_sources.csv` |
 | `--fetch-osm` | fill blank coordinates (Nominatim) and all 72 directed distances (OSRM car router, OpenStreetMap) |
-| `--find-demo-seed` | suggest a seed whose first moves show every case of the acceptance rule |
-| `--check-consistency` | confirm every figure, table, map and doc comes from the current data |
 
 ## Project structure
 
@@ -59,7 +53,6 @@ tsp_sa_cdo/
     locations.csv          V0..V8: name, short name, role, address, lat, lon, map link
     distance_matrix.csv    9 x 9 DIRECTED matrix in km (row = from, column = to)
     data_sources.csv       one row per directed edge: ACTUAL/ASSUMED, date, time, route
-    placeholder/           synthetic demo data (never present it)
   src/
     config.py              every parameter in one place
     data_loader.py         load + validate the CSVs (square, zero diagonal, positive, ids...)
@@ -69,17 +62,14 @@ tsp_sa_cdo/
     verify.py              tour validity + independent edge-by-edge recount
     experiments.py         30-run statistics, α sensitivity, neighbour comparison
     visualize.py           charts and the GIF
-    maps.py                folium HTML map + static PNG map
-    report.py              console tables, CSV/JSON exports
+    maps.py                folium HTML maps (dataset, route) + static PNG maps
+    report.py              console tables, CSV exports
     osm_data.py            OpenStreetMap coordinates + OSRM directed distances (--fetch-osm)
-    docs_builder.py        fills docs/templates with the numbers of the latest run
-    consistency.py         data-fingerprint check across all outputs
   main.py                  single entry point
-  demo.ipynb               notebook version for the video
+  demo.ipynb               the write-up: runs everything step by step, with explanations
   tests/                   pytest suite
-  tools/make_placeholder_data.py   regenerates the placeholder data and blank templates
   outputs/                 generated figures, tables, logs
-  docs/                    slides outline, narration script, checklists, guides
+  docs/                    slides outline, narration script, rubric checklist
   README.md  REFERENCES.md  requirements.txt
 ```
 
@@ -107,6 +97,7 @@ Algorithm 2.5 hides one detail that Appendix 4.5 shows: an **inner loop** of `it
 
 | File | Content |
 |---|---|
+| `dataset_map.html` | the whole dataset on OpenStreetMap: every location, every pair with both directed distances (hover / click) |
 | `fig0_locations_map.png` | the 9 locations on an OpenStreetMap base map, no route (slide A3) |
 | `fig1_graph.png`, `fig1b_route_on_graph.png` | labelled directed graph; the route on it with km per leg |
 | `fig2_weight_matrix.png` | weight matrix in km, assumed cells hatched |
@@ -119,9 +110,6 @@ Algorithm 2.5 hides one detail that Appendix 4.5 shows: an **inner loop** of `it
 | `trace.csv`, `sa_history.csv` | step-by-step numbers |
 | `verification_table.csv` | edge-by-edge recount |
 | `table2_style_results.csv`, `sa_runs.csv` | paper Table 2 format, per-run details |
-| `results_summary.json`, `experiments.json` | everything, machine-readable (feeds `docs/`) |
-
-Every file carries the **data fingerprint** (a hash of the three CSVs). `--check-consistency` uses it to prove that the graph, table, inputs and results all match.
 
 ## Modifications to the paper's code
 See `REFERENCES.md` → "How our code relates to [1] Appendix 4.5": directed matrix input, fixed depot, calibrated and tuned parameters, the extra stopping rules, trace/history, verification, and an optional 2-opt neighbour.
@@ -132,4 +120,4 @@ Static distances (no traffic or time of day), no time windows, a single vehicle,
 ## Troubleshooting
 - **Δ or → print as `?` on Windows:** run in Windows Terminal or VS Code. `main.py` already switches the console to UTF-8.
 - **"basemap tiles unavailable"**: the static map PNG needs internet for OpenStreetMap tiles; without it, the PNG uses a plain background. The HTML map always works online.
-- **The validator stops the run:** read the ERROR lines; `docs/data_collection_guide.md` explains each one.
+- **The validator stops the run:** read the ERROR lines; each names the file, row and problem.

@@ -6,7 +6,7 @@ How to read this script:
 - **[TYPE]** is what you type during the live part.
 - Plain paragraphs are spoken. At roughly 140 words a minute, each block fits its time slot.
 - If you are presenting as a team, split it by section (A–E).
-- Every number here comes from the run with data fingerprint `c652b67ace`. Rerun `python main.py` after any data change and this file updates itself.
+- Every number here comes from `python main.py` on the data in `data/*.csv`.
 
 ---
 
@@ -89,7 +89,7 @@ This is our input data, exactly as collected: the locations with their coordinat
 
 **8:35 [SHOW] scroll slowly through the console output**
 
-First the program validates the data and prints its fingerprint, `c652b67ace`, which is also stamped on every figure. Then it prints the inputs and the parameters. Here is the trace of the first five moves: the current tour, the swap, the new tour, delta, the temperature, the probability, the random number and the decision. These are the numbers from our worked example.
+First the program validates the data. Then it prints the inputs and the parameters. Here is the trace of the first five moves: the current tour, the swap, the new tour, delta, the temperature, the probability, the random number and the decision. These are the numbers from our worked example.
 
 **9:20 [SHOW] "SIMULATED ANNEALING RESULT" block**
 
@@ -129,5 +129,3 @@ Our references are on screen: the assigned paper, whose Appendix code is the bas
 
 **13:05 End.**
 
----
-_Generated 2026-10-17 19:10 from data fingerprint `c652b67ace` by `src/docs_builder.py`. Do not edit by hand; edit `docs/templates/narration_script.md.tmpl` instead._

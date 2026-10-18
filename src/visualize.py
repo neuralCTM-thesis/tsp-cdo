@@ -4,18 +4,19 @@ visualize.py - every chart in outputs/ (the maps live in maps.py).
 Design rules used throughout (so the figures read well in a screen recording):
   * large fonts, thin marks, hairline grids, one y-axis per chart
   * fixed colours: blue = SA / best, orange = current tour or depot, aqua = third series
-  * every figure is stamped with the data fingerprint (bottom right, and in the
-    PNG metadata), and watermarked "PLACEHOLDER DATA" when the data are not real
+  * every figure is stamped with the data source (bottom right)
 """
 from __future__ import annotations
 
 import math
+import sys
 from io import BytesIO
 from pathlib import Path
 
 import matplotlib
 
-matplotlib.use("Agg")  # render to files; works without a display
+if "ipykernel" not in sys.modules:  # keep Jupyter's inline plots working
+    matplotlib.use("Agg")  # render to files; works without a display
 import matplotlib.pyplot as plt  # noqa: E402
 import networkx as nx  # noqa: E402
 import numpy as np  # noqa: E402
@@ -32,7 +33,6 @@ from src.report import fmt_km  # noqa: E402
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK2, MUTED = "#0b0b0b", "#52514e", "#898781"
 GRID, AXIS, SURFACE = "#e1e0d9", "#c3c2b7", "#ffffff"
-WARNING_RED = "#d03b3b"
 SEQ_BLUES = LinearSegmentedColormap.from_list(
     "seq_blue", ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"])
 
@@ -56,23 +56,15 @@ def apply_style() -> None:
 
 
 def stamp(fig: plt.Figure, ds: Dataset, y: float = -0.01, va: str = "top") -> None:
-    """Fingerprint footer on every figure + a watermark when the data are placeholders.
-    The footer sits just below the figure (kept by bbox_inches='tight') so it never
+    """Data-source footer on every figure. The footer sits just below the figure (kept by bbox_inches='tight') so it never
     covers an axis label."""
-    status = ds.source_label
-    fig.text(0.995, y, f"{status} | data fingerprint {ds.fingerprint}", ha="right",
-             va=va, fontsize=10, color=MUTED)
-    if ds.is_placeholder:
-        fig.text(0.5, 0.5, "PLACEHOLDER DATA\nnot real distances", ha="center", va="center",
-                 fontsize=44, color=WARNING_RED, alpha=0.22, rotation=24, weight="bold",
-                 zorder=100)
+    fig.text(0.995, y, ds.source_label, ha="right", va=va, fontsize=10, color=MUTED)
 
 
 def save(fig: plt.Figure, path: Path, ds: Dataset) -> Path:
     stamp(fig, ds)
     path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(path, dpi=config.FIG_DPI, bbox_inches="tight",
-                metadata={"Description": f"fingerprint={ds.fingerprint}"})
+    fig.savefig(path, dpi=config.FIG_DPI, bbox_inches="tight")
     plt.close(fig)
     return path
 
@@ -210,8 +202,7 @@ def plot_matrix(D: list[list[float]], ds: Dataset, path: Path) -> Path:
     ax.set_ylabel("FROM (row)")
     cbar = fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02)
     cbar.set_label("driving distance (km)")
-    note = (f"* hatched = ASSUMED (not measured); all other cells ACTUAL ({ds.source_label})"
-            if not ds.is_placeholder else "all cells are PLACEHOLDER values")
+    note = f"* hatched = ASSUMED (not measured); all other cells ACTUAL ({ds.source_label})"
     ax.set_title(f"Weight matrix D (km): D[i][j] = distance FROM row i TO column j\n{note}",
                  fontsize=config.BASE_FONT_SIZE, pad=14, loc="left", y=-0.12)
     return save(fig, path, ds)
@@ -428,5 +419,5 @@ def make_gif(hist, ds: Dataset, path: Path) -> Path:
     frames += [frames[-1]] * 8  # hold the final answer on screen
     path.parent.mkdir(parents=True, exist_ok=True)
     frames[0].save(path, save_all=True, append_images=frames[1:], duration=config.GIF_FRAME_MS,
-                   loop=0, comment=f"fingerprint={ds.fingerprint}".encode())
+                   loop=0)
     return path

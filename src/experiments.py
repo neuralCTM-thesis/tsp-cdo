@@ -5,7 +5,6 @@ experiments.py - repeated runs and parameter studies (all on the same distance m
 * alpha_sensitivity       solution quality vs runtime for several cooling rates
 * neighbor_comparison     swap (paper) vs segment reversal (our extension)
 * paper_defaults_run      one run with the Appendix 4.5 defaults, for comparison
-* find_demo_seed          a seed whose first moves show every case of the rule
 """
 from __future__ import annotations
 
@@ -106,24 +105,3 @@ def paper_defaults_run(D: list[list[float]], seed: int, optimum: float) -> dict:
             "t_stop": config.PAPER_DEFAULTS.t_stop, "cost": rec.cost,
             "hit_optimum": rec.hit_optimum, "iterations": rec.iterations, "levels": rec.levels,
             "runtime_s": rec.runtime_s}
-
-
-def trace_shows_every_case(trace) -> bool:
-    """True if the trace contains an improving move, an accepted worse move and a rejection."""
-    improving = any(s.delta < 0 for s in trace)
-    worse_accepted = any(s.delta > 0 and s.accepted for s in trace)
-    rejected = any(not s.accepted for s in trace)
-    return improving and worse_accepted and rejected
-
-
-def find_demo_seed(D: list[list[float]], params: SAParams, neighbor: str, optimum: float,
-                   candidates: range = range(1, 501)) -> int | None:
-    """First seed whose run reaches the optimum AND whose first few moves show all three
-    cases of the acceptance rule (good for explaining the trace in the video)."""
-    params = resolve_params(D, params, neighbor)
-    for seed in candidates:
-        res = simulated_annealing(D, params, seed, neighbor, record_history=False,
-                                  trace_steps=config.TRACE_PRINT_STEPS)
-        if is_optimal(res.best_cost, optimum) and trace_shows_every_case(res.trace):
-            return seed
-    return None

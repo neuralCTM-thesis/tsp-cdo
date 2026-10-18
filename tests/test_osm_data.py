@@ -52,7 +52,7 @@ def test_geocode_accepts_only_points_in_cdo():
 
 
 def test_fill_missing_coordinates_keeps_existing_and_reports_missing(tmp_path):
-    shutil.copytree(config.PLACEHOLDER_DIR, tmp_path / "d")
+    shutil.copytree(config.DATA_DIR, tmp_path / "d")
     path = tmp_path / "d" / config.LOCATIONS_FILE
     rows = list(csv.DictReader(path.open(encoding="utf-8")))
     rows[1]["latitude"] = rows[1]["longitude"] = ""
@@ -72,10 +72,7 @@ def test_fill_missing_coordinates_keeps_existing_and_reports_missing(tmp_path):
 
 
 def test_fetch_distances_builds_a_valid_asymmetric_dataset(tmp_path):
-    shutil.copytree(config.PLACEHOLDER_DIR, tmp_path / "d")
-    loc = tmp_path / "d" / config.LOCATIONS_FILE
-    loc.write_text(loc.read_text(encoding="utf-8").replace("PLACEHOLDER", "Test"),
-                   encoding="utf-8")
+    shutil.copytree(config.DATA_DIR, tmp_path / "d")
 
     def fake_osrm(url, params):
         coords = url.rsplit("/", 1)[1].split(";")

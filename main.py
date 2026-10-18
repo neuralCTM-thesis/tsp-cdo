@@ -11,13 +11,9 @@ Typical use
     python main.py --experiments       alpha sensitivity, swap vs 2-opt, paper defaults (~3 min)
 
 Other options
-    --seed N  --runs N  --neighbor swap|2opt  --placeholder  --no-figures
+    --seed N  --runs N  --neighbor swap|2opt  --no-figures
     --validate          check the CSV files only
-    --prepare-sources   write one row per directed edge into data/data_sources.csv
-    --build-matrix      build data/distance_matrix.csv from data/data_sources.csv
     --fetch-osm         fill coordinates + all directed distances from OpenStreetMap (OSRM)
-    --find-demo-seed    suggest a seed whose trace shows every case of the acceptance rule
-    --check-consistency confirm that every figure, table and doc comes from the current data
 """
 from __future__ import annotations
 
@@ -28,13 +24,11 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from src import config, report
-from src.baselines import brute_force, gap_percent, greedy_nearest_neighbor, is_optimal
-from src.data_loader import (Dataset, build_matrix_from_sources, distance_matrix,
-                             is_unfilled_template, load_dataset, prepare_sources_template,
-                             validate_dataset)
-from src.experiments import (alpha_sensitivity, find_demo_seed, neighbor_comparison,
-                             paper_defaults_run, run_many, summarize)
-from src.graph_model import build_digraph, route_labels, route_names
+from src.baselines import brute_force, greedy_nearest_neighbor
+from src.data_loader import Dataset, distance_matrix, load_dataset, validate_dataset
+from src.experiments import (alpha_sensitivity, neighbor_comparison, paper_defaults_run,
+                             run_many, summarize)
+from src.graph_model import build_digraph
 from src.simulated_annealing import calibrate_initial_temperature, simulated_annealing
 from src.verify import verify_solution
 
@@ -42,29 +36,14 @@ OUT = config.OUTPUT_DIR
 
 
 # ---------------------------------------------------------------------------
-# Step 1 - choose, load and validate the data
+# Step 1 - load and validate the data
 # ---------------------------------------------------------------------------
-def select_dataset(force_placeholder: bool = False) -> Dataset:
-    """Real data from data/ unless it is still an empty template (or --placeholder)."""
-    if force_placeholder:
-        ds = load_dataset(config.PLACEHOLDER_DIR)
-    elif is_unfilled_template(config.DATA_DIR):
-        print("\nNOTE: data/distance_matrix.csv has no distances yet -> using the "
-              "PLACEHOLDER dataset in data/placeholder/.")
-        ds = load_dataset(config.PLACEHOLDER_DIR)
-    else:
-        ds = load_dataset(config.DATA_DIR)
-    if ds.is_placeholder:
-        print(report.placeholder_banner())
-    return ds
-
-
-def load_and_validate(force_placeholder: bool = False):
-    ds = select_dataset(force_placeholder)
+def load_and_validate():
+    ds = load_dataset(config.DATA_DIR)
     rep = validate_dataset(ds)
     report.print_validation(rep, ds)
     if not rep.ok:
-        print("\nFix the errors above (or run with --placeholder). Stopping.")
+        print("\nFix the errors above in data/*.csv. Stopping.")
         sys.exit(1)
     D = distance_matrix(ds)
     report.export_vertices(ds, OUT)
@@ -93,7 +72,7 @@ def run_presentation(ds: Dataset, D, args) -> dict:
     if args.trace:
         report.print_trace(res.trace[:config.TRACE_PRINT_STEPS], ds, args.neighbor)
     report.export_trace(res.trace, ds, OUT)
-    report.export_history(res.history, OUT, ds.fingerprint)
+    report.export_history(res.history, OUT)
     report.print_sa_result(res, ds)
 
     G = build_digraph(ds, D)
@@ -117,8 +96,7 @@ def run_statistics(ds: Dataset, D, ctx: dict, args) -> None:
     report.print_run_statistics(summary, ctx["bf"].optimal_cost, ctx["greedy"].cost,
                                 ctx["bf"].runtime_s, ctx["greedy"].runtime_s)
     report.export_runs(records, OUT, ds)
-    report.export_table2(summary, ctx["bf"].optimal_cost, ctx["greedy"], ctx["bf"], OUT,
-                         ds.fingerprint)
+    report.export_table2(summary, ctx["bf"].optimal_cost, ctx["greedy"], ctx["bf"], OUT)
     ctx.update(records=records, summary=summary)
 
 
@@ -136,9 +114,10 @@ def make_figures(ds: Dataset, D, ctx: dict) -> dict:
         "route_graph": viz.plot_route_graph(ctx["G"], ds, res.route, res.best_cost,
                                             OUT / "fig1b_route_on_graph.png"),
         "matrix": viz.plot_matrix(D, ds, OUT / "fig2_weight_matrix.png"),
+        "dataset_map": maps.make_dataset_map(ds, D, OUT / "dataset_map.html"),
         "map_html": maps.make_folium_map(ds, res.route, D, res.best_cost, OUT / "route_map.html"),
     }
-    files["map_png"], used_tiles = maps.make_static_map(ds, res.route, D, res.best_cost,
+    files["map_png"], _ = maps.make_static_map(ds, res.route, D, res.best_cost,
                                                         OUT / "fig3_route_map.png")
     files.update({
         "convergence": viz.plot_convergence(res.history, bf.optimal_cost, ds,
@@ -157,75 +136,13 @@ def make_figures(ds: Dataset, D, ctx: dict) -> dict:
     for path in files.values():
         print(f"  {Path(path).name}")
     print(f"\n  Open the whole route in Google Maps (for viewing):\n  {url}")
-    ctx.update(figures={k: Path(v).name for k, v in files.items()}, used_tiles=used_tiles,
-               gmaps_url=url)
     return files
-
-
-# ---------------------------------------------------------------------------
-# Step 5 - machine-readable summary (feeds docs/ and the consistency check)
-# ---------------------------------------------------------------------------
-def build_summary(ds: Dataset, rep, D, ctx: dict, args) -> dict:
-    res, bf, greedy, vr, params = ctx["res"], ctx["bf"], ctx["greedy"], ctx["vr"], ctx["params"]
-    return {
-        "fingerprint": ds.fingerprint, "is_placeholder": ds.is_placeholder,
-        "data_dir": str(ds.data_dir.relative_to(config.PROJECT_ROOT)),
-        "generated_at": report.timestamp(), "n": ds.n, "n_hospitals": ds.n - 1,
-        "n_arcs": ds.n * (ds.n - 1), "n_tours": bf.tours_evaluated,
-        "locations": [vars(l) for l in ds.locations],
-        "matrix": D,
-        "edge_status": [[ds.edge_status(i, j) if i != j else "" for j in range(ds.n)]
-                        for i in range(ds.n)],
-        "measurement": measurement_info(ds),
-        "status_counts": rep.status_counts, "asymmetric_pairs": len(rep.asymmetric_pairs),
-        "assumed_edges": len(rep.assumed_edges),
-        "triangle_violations": len(rep.triangle_violations),
-        "params": vars(params), "mean_uphill_km": ctx["mean_uphill"], "seed": args.seed,
-        "neighbor": args.neighbor, "runs": args.runs,
-        "sa": {"route": res.route, "route_labels": route_labels(res.route, ds),
-               "route_names": route_names(res.route, ds), "cost": res.best_cost,
-               "initial_route_labels": route_labels(res.initial_tour + [0], ds),
-               "initial_cost": res.initial_cost, "iterations": res.iterations,
-               "levels": res.levels, "best_found_at": res.best_found_at,
-               "stop_reason": res.stop_reason, "runtime_s": res.runtime_s,
-               "is_optimal": is_optimal(res.best_cost, bf.optimal_cost),
-               "gap_pct": gap_percent(res.best_cost, bf.optimal_cost)},
-        "verification": {"checks": [vars(c) for c in vr.checks],
-                         "edges": [vars(e) for e in vr.edges],
-                         "recomputed_km": vr.recomputed_km, "reported_km": vr.reported_km,
-                         "passed": vr.passed},
-        "brute_force": {"optimal_cost": bf.optimal_cost, "n_optimal_tours": len(bf.optimal_tours),
-                        "optimal_routes": [route_labels(t + [0], ds) for t in bf.optimal_tours],
-                        "worst_cost": bf.worst_cost, "mean_cost": bf.mean_cost,
-                        "tours_evaluated": bf.tours_evaluated, "runtime_s": bf.runtime_s},
-        "greedy": {"route_labels": route_labels(greedy.route, ds), "cost": greedy.cost,
-                   "gap_pct": gap_percent(greedy.cost, bf.optimal_cost),
-                   "runtime_s": greedy.runtime_s},
-        "run_summary": ctx["summary"],
-        "runs_detail": [vars(r) for r in ctx["records"]],
-        "trace": [vars(s) for s in res.trace[:config.TRACE_PRINT_STEPS]],
-        "figures": ctx.get("figures", {}), "used_basemap_tiles": ctx.get("used_tiles"),
-        "google_maps_route_url": ctx.get("gmaps_url", ""),
-    }
-
-
-def measurement_info(ds: Dataset) -> dict:
-    """Where and when the distances and coordinates were obtained (slides, REFERENCES)."""
-    actual = [s for s in ds.sources.values() if s.status == "ACTUAL"]
-    dates = sorted({s.measured_date for s in actual if s.measured_date})
-    times = sorted({s.measured_time for s in actual if s.measured_time})
-    notes = [loc.notes for loc in ds.locations]
-    from_osm = sum("OpenStreetMap" in note for note in notes)
-    return {"dates": dates, "first_time": times[0] if times else "",
-            "last_time": times[-1] if times else "", "source_label": ds.source_label,
-            "sources": sorted({s.source for s in ds.sources.values() if s.source}),
-            "coords_from_osm": from_osm, "coords_total": len(notes)}
 
 
 # ---------------------------------------------------------------------------
 # Optional experiments
 # ---------------------------------------------------------------------------
-def run_experiments(ds: Dataset, D, args) -> dict:
+def run_experiments(ds: Dataset, D, args) -> None:
     from src import visualize as viz
     report.section("EXPERIMENTS (same distance matrix; this takes 2-3 minutes)")
     bf = brute_force(D)
@@ -240,7 +157,7 @@ def run_experiments(ds: Dataset, D, args) -> dict:
                "hit opt", "ms/run"]
     print("\nAlpha sensitivity (only alpha changes; same seeds, T0, moves per level, T_stop):")
     print(report.format_table(headers, rows, "r" * len(headers)))
-    report.write_csv(OUT / "alpha_sensitivity.csv", headers, rows, ds.fingerprint)
+    report.write_csv(OUT / "alpha_sensitivity.csv", headers, rows)
 
     neigh = neighbor_comparison(D, config.SA_DEFAULTS, seeds, bf.optimal_cost)
     rows = [[r["neighbor"], r["t0"], f"{r['mean_iterations']:,.0f}", report.fmt_km(r["best"]),
@@ -249,7 +166,7 @@ def run_experiments(ds: Dataset, D, args) -> dict:
     headers = ["neighbour", "T0", "moves", "best", "worst", "mean", "std", "hit opt", "ms/run"]
     print("\nNeighbour move: swap (paper) vs segment reversal (our extension):")
     print(report.format_table(headers, rows, "l" + "r" * (len(headers) - 1)))
-    report.write_csv(OUT / "neighbor_comparison.csv", headers, rows, ds.fingerprint)
+    report.write_csv(OUT / "neighbor_comparison.csv", headers, rows)
 
     print("\nOne run with the paper's Appendix 4.5 defaults (T0=1000, alpha=0.995, "
           "1000 moves/level, T_stop=1e-8) ...")
@@ -257,8 +174,7 @@ def run_experiments(ds: Dataset, D, args) -> dict:
     print(f"  {paper['iterations']:,} moves, {paper['levels']:,} levels, "
           f"{paper['runtime_s']:.1f} s -> {report.fmt_km(paper['cost'])} km "
           f"({'optimal' if paper['hit_optimum'] else 'not optimal'})")
-    report.write_csv(OUT / "paper_defaults_run.csv", list(paper), [list(paper.values())],
-                     ds.fingerprint)
+    report.write_csv(OUT / "paper_defaults_run.csv", list(paper), [list(paper.values())])
     viz.apply_style()
     viz.plot_parameter_study(alphas, "alpha", "cooling rate α",
                              f"Cooling-rate sensitivity ({len(seeds)} runs per value)", ds,
@@ -266,11 +182,6 @@ def run_experiments(ds: Dataset, D, args) -> dict:
     viz.plot_parameter_study(neigh, "neighbor", "neighbour move",
                              f"Swap (paper) vs segment reversal ({len(seeds)} runs each)", ds,
                              OUT / "fig10_neighbor_comparison.png")
-    payload = {"fingerprint": ds.fingerprint, "generated_at": report.timestamp(),
-               "alpha_sensitivity": alphas, "neighbor_comparison": neigh, "paper_defaults": paper,
-               "optimum": bf.optimal_cost, "runs_per_setting": len(seeds)}
-    report.write_json(OUT / "experiments.json", payload)
-    return payload
 
 
 # ---------------------------------------------------------------------------
@@ -281,17 +192,12 @@ def parse_args(argv=None) -> argparse.Namespace:
     p.add_argument("--seed", type=int, default=config.DEFAULT_SEED, help="seed of the main run")
     p.add_argument("--runs", type=int, default=config.DEFAULT_RUNS, help="independent SA runs")
     p.add_argument("--trace", action="store_true", help="print the first SA moves in full")
-    p.add_argument("--placeholder", action="store_true", help="force the placeholder dataset")
     p.add_argument("--neighbor", choices=sorted(("swap", "2opt")), default=config.NEIGHBOR_DEFAULT)
     p.add_argument("--no-figures", action="store_true", help="skip figures and maps")
     p.add_argument("--experiments", action="store_true", help="parameter / neighbour studies")
     p.add_argument("--validate", action="store_true", help="validate the CSV files only")
-    p.add_argument("--prepare-sources", action="store_true", help="fill data_sources.csv rows")
-    p.add_argument("--build-matrix", action="store_true", help="matrix from data_sources.csv")
     p.add_argument("--fetch-osm", action="store_true",
                    help="coordinates + directed distances from OpenStreetMap (OSRM)")
-    p.add_argument("--find-demo-seed", action="store_true", help="suggest a seed for the video")
-    p.add_argument("--check-consistency", action="store_true", help="outputs match the data?")
     return p.parse_args(argv)
 
 
@@ -331,21 +237,12 @@ def use_utf8_console() -> None:
 def main(argv=None) -> None:
     use_utf8_console()
     args = parse_args(argv)
-    if args.prepare_sources:
-        print(f"wrote {prepare_sources_template(config.DATA_DIR)}")
-        return
-    if args.build_matrix:
-        print(f"wrote {build_matrix_from_sources(config.DATA_DIR)}")
-        return
     if args.fetch_osm:
         from src.osm_data import fetch_all
         fetch_all(config.DATA_DIR)
         return
-    if args.check_consistency:
-        from src.consistency import run_consistency_check
-        sys.exit(0 if run_consistency_check(args.placeholder) else 1)
 
-    if args.validate or args.find_demo_seed:
+    if args.validate:
         run(args)  # quick checks: no log file, so the last full-run log is kept
         return
     with log_console(OUT / ("experiments_log.txt" if args.experiments else "run_log.txt")):
@@ -354,18 +251,11 @@ def main(argv=None) -> None:
 
 def run(args: argparse.Namespace) -> None:
     print("Simulated Annealing for the TSP - Red Cross blood delivery, Cagayan de Oro City")
-    ds, rep, D = load_and_validate(args.placeholder)
+    ds, rep, D = load_and_validate()
     if args.validate:
-        return
-    from src.docs_builder import build_docs
-    if args.find_demo_seed:
-        params, _ = resolve_sa_params(D, args.neighbor)
-        seed = find_demo_seed(D, params, args.neighbor, brute_force(D).optimal_cost)
-        print(f"\nSuggested demo seed: {seed}  (set DEFAULT_SEED in src/config.py or use --seed)")
         return
     if args.experiments:
         run_experiments(ds, D, args)
-        build_docs()
         return
 
     report.print_inputs(ds, D)
@@ -373,10 +263,6 @@ def run(args: argparse.Namespace) -> None:
     run_statistics(ds, D, ctx, args)
     if not args.no_figures:
         make_figures(ds, D, ctx)
-    report.write_json(OUT / "results_summary.json", build_summary(ds, rep, D, ctx, args))
-    build_docs()
-    if ds.is_placeholder:
-        print(report.placeholder_banner())
 
 
 if __name__ == "__main__":

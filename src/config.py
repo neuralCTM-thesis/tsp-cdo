@@ -27,10 +27,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
-PLACEHOLDER_DIR = DATA_DIR / "placeholder"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
-DOCS_DIR = PROJECT_ROOT / "docs"
-TEMPLATES_DIR = DOCS_DIR / "templates"
 
 LOCATIONS_FILE = "locations.csv"
 MATRIX_FILE = "distance_matrix.csv"
